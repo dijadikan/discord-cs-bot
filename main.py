@@ -11,15 +11,25 @@ ALLOWED_CHANNEL = 1471225787129532641
 LOG_CHANNEL_ID = 1471225787129532641
 
 if not TOKEN:
-    raise ValueError("TOKEN tidak ditemukan di Railway Variables")
+    raise RuntimeError("TOKEN tidak ditemukan di Railway Variables")
 
 # ================= BOT SETUP =================
 
 intents = discord.Intents.default()
-bot = commands.Bot(command_prefix="!", intents=intents)
-tree = bot.tree
 
+bot = commands.Bot(
+    command_prefix="!",
+    intents=intents
+)
+
+tree = bot.tree
 user_data = {}
+
+# ================= ERROR HANDLER =================
+
+@bot.event
+async def on_command_error(ctx, error):
+    print("Command Error:", error)
 
 # ================= CHECK CHANNEL =================
 
@@ -35,10 +45,10 @@ async def check_channel(interaction):
 # ================= EMBED PANEL =================
 
 def panel_embed():
-    return discord.Embed(
+    embed = discord.Embed(
         title="📝 Panel Character Story",
         description=(
-            "Klik tombol di bawah untuk membuat CS\n\n"
+            "Klik tombol di bawah untuk membuat Character Story\n\n"
             "📌 Step:\n"
             "1️⃣ Pilih Server\n"
             "2️⃣ Pilih Sisi\n"
@@ -46,10 +56,12 @@ def panel_embed():
         ),
         color=0x5865F2
     )
+    return embed
 
 # ================= SERVER SELECT =================
 
 class ServerSelect(discord.ui.Select):
+
     def __init__(self):
         options = [
             discord.SelectOption(label="AARP", emoji="🌍"),
@@ -63,7 +75,10 @@ class ServerSelect(discord.ui.Select):
         )
 
     async def callback(self, interaction: discord.Interaction):
-        user_data[interaction.user.id] = {"server": self.values[0]}
+
+        user_data[interaction.user.id] = {
+            "server": self.values[0]
+        }
 
         embed = discord.Embed(
             title="🎭 Pilih Sisi Karakter",
@@ -77,6 +92,7 @@ class ServerSelect(discord.ui.Select):
         )
 
 class ServerView(discord.ui.View):
+
     def __init__(self):
         super().__init__(timeout=None)
         self.add_item(ServerSelect())
@@ -85,13 +101,18 @@ class ServerView(discord.ui.View):
 
 class AlignmentView(discord.ui.View):
 
+    def __init__(self):
+        super().__init__(timeout=None)
+
     @discord.ui.button(label="Sisi Baik", emoji="😇", style=discord.ButtonStyle.success)
     async def good(self, interaction: discord.Interaction, button: discord.ui.Button):
+
         user_data[interaction.user.id]["side"] = "Good"
         await interaction.response.send_modal(BasicModal())
 
     @discord.ui.button(label="Sisi Jahat", emoji="😈", style=discord.ButtonStyle.danger)
     async def bad(self, interaction: discord.Interaction, button: discord.ui.Button):
+
         user_data[interaction.user.id]["side"] = "Bad"
         await interaction.response.send_modal(BasicModal())
 
@@ -129,6 +150,9 @@ class BasicModal(discord.ui.Modal, title="📋 Detail Karakter (1/2)"):
 
 class NextView(discord.ui.View):
 
+    def __init__(self):
+        super().__init__(timeout=None)
+
     @discord.ui.button(label="Lanjutkan", emoji="➡", style=discord.ButtonStyle.primary)
     async def next(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.send_modal(StoryModal())
@@ -165,11 +189,16 @@ class StoryModal(discord.ui.Modal, title="📖 Detail Cerita (2/2)"):
         embed.add_field(name="🎯 Skill", value=data["skill"])
 
         if data["tambahan"]:
-            embed.add_field(name="📜 Tambahan", value=data["tambahan"], inline=False)
+            embed.add_field(
+                name="📜 Tambahan",
+                value=data["tambahan"],
+                inline=False
+            )
 
         embed.set_footer(text=f"Dibuat oleh {interaction.user}")
 
         log_channel = bot.get_channel(LOG_CHANNEL_ID)
+
         if log_channel:
             await log_channel.send(embed=embed)
 
@@ -182,6 +211,9 @@ class StoryModal(discord.ui.Modal, title="📖 Detail Cerita (2/2)"):
 
 class MenuView(discord.ui.View):
 
+    def __init__(self):
+        super().__init__(timeout=None)
+
     @discord.ui.button(label="Buat CS", emoji="📝", style=discord.ButtonStyle.primary)
     async def create(self, interaction: discord.Interaction, button: discord.ui.Button):
 
@@ -193,8 +225,7 @@ class MenuView(discord.ui.View):
         await interaction.response.send_message(
             embed=embed,
             view=ServerView(),
-            ephemeral=True
-        )
+            ephemeral=True)
 
 # ================= COMMANDS =================
 
@@ -209,7 +240,7 @@ async def menu(interaction: discord.Interaction):
         view=MenuView()
     )
 
-@tree.command(name="status", description="Status Bot")
+@tree.command(name="status", description="Status bot")
 async def status(interaction: discord.Interaction):
 
     if not await check_channel(interaction):
@@ -220,18 +251,36 @@ async def status(interaction: discord.Interaction):
         color=0x2ecc71
     )
 
-    embed.add_field(name="📡 Ping", value=f"{round(bot.latency * 1000)} ms")
-    embed.add_field(name="🌍 Server", value=len(bot.guilds))
+    embed.add_field(
+        name="📡 Ping",
+        value=f"{round(bot.latency * 1000)} ms"
+    )
 
-    await interaction.response.send_message(embed=embed, ephemeral=True)
+    embed.add_field(
+        name="🌍 Server",
+        value=len(bot.guilds)
+    )
+
+    await interaction.response.send_message(
+        embed=embed,
+        ephemeral=True
+    )
 
 # ================= READY =================
 
 @bot.event
 async def on_ready():
+
     try:
         await tree.sync()
-        print(f"Bot aktif sebagai {bot.user}")
+        print(f"✅ Bot aktif sebagai {bot.user}")
+
+        # Register persistent views
+        bot.add_view(MenuView())
+        bot.add_view(ServerView())
+        bot.add_view(AlignmentView())
+        bot.add_view(NextView())
+
     except Exception as e:
         print("Sync error:", e)
 
