@@ -4,6 +4,10 @@ from discord.ext import commands
 from discord import app_commands
 import re
 
+# ===== AMBIL TOKEN ENV DI ATAS =====
+TOKEN = os.getenv("TOKEN")  # Pastikan di Railway kamu bikin ENV var "TOKEN"
+
+# ===== INTENTS & BOT =====
 intents = discord.Intents.all()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -33,7 +37,7 @@ def deobfuscate_lua(code: str) -> str:
             indent += 1
     return formatted.strip()
 
-# ===== AUTO DETECT UPLOAD =====
+# ===== AUTO DETECT FILE UPLOAD =====
 @bot.event
 async def on_message(message):
     if message.author.bot:
@@ -99,5 +103,4 @@ async def status(interaction: discord.Interaction):
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
 # ===== RUN BOT =====
-TOKEN = os.getenv("DISCORD_TOKEN")
 bot.run(TOKEN)
