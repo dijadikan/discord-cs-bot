@@ -7,10 +7,10 @@ import random
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Temp storage per user untuk side
+# Temp storage per user
 bot.user_temp = {}
 
-# ====== SERVER SELECTION ======
+# ===== SERVER SELECTION =====
 class ServerSelect(Select):
     def __init__(self):
         options = [
@@ -30,9 +30,7 @@ class ServerSelect(Select):
         bot.user_temp[interaction.user.id] = {"server": self.values[0]}
         embed = discord.Embed(
             title="📌 Pilih Sisi Karakter",
-            description="Pilih sisi karakter kamu untuk menentukan cerita Roleplay:\n\n"
-                        "😇 Good Side: Karakter yang hidup secara legal dan membantu masyarakat.\n"
-                        "😈 Bad Side: Karakter yang hidup di dunia kriminal dan street life.",
+            description="Pilih sisi karakter:\n\n😇 Good Side: Hidup legal & bantu masyarakat.\n😈 Bad Side: Dunia kriminal & street life.",
             color=0x7289da
         )
         await interaction.response.send_message(embed=embed, view=SideView(), ephemeral=True)
@@ -42,7 +40,7 @@ class ServerView(View):
         super().__init__()
         self.add_item(ServerSelect())
 
-# ====== SIDE SELECTION ======
+# ===== SIDE SELECTION =====
 class SideView(View):
     def __init__(self):
         super().__init__()
@@ -57,11 +55,10 @@ class SideView(View):
         bot.user_temp[interaction.user.id]["side"] = "Bad Side"
         await interaction.response.send_modal(CharacterModal())
 
-# ====== CHARACTER MODAL ======
+# ===== CHARACTER MODAL =====
 class CharacterModal(Modal):
     def __init__(self):
         super().__init__(title="📝 Buat Character Story")
-
         self.add_item(TextInput(label="Lengkap Karakter (IC) *",
                                placeholder="Contoh: Tatang, Johan, Ayumi, Ratu_Valencino", required=True, max_length=50))
         self.add_item(TextInput(label="Level Karakter *",
@@ -109,7 +106,7 @@ class CharacterModal(Modal):
         await channel.send(embed=embed)
         await interaction.response.send_message("✅ Character Story berhasil dibuat!", ephemeral=True)
 
-# ====== GENERATE STORY PANJANG & UNIK ======
+# ===== STORY GENERATOR =====
 def generate_long_story(data):
     good_extra = [
         "Ia sering terlibat dalam kegiatan sosial dan membimbing generasi muda.",
@@ -128,37 +125,17 @@ def generate_long_story(data):
     ]
 
     paragraphs = []
-
     if data["side"] == "Good Side":
-        paragraphs.append(
-            f"{data['nama']} adalah karakter level {data['level']} yang hidup secara legal dan membantu masyarakat. "
-            f"Lahir pada {data['tgl_lahir']} di {data['kota']}, {data['nama']} dikenal disiplin dan bertanggung jawab."
-        )
-        paragraphs.append(
-            f"Sebagai {data['pekerjaan']}, {data['nama']} berperan aktif menjaga keamanan dan kesejahteraan komunitasnya. "
-            f"{random.choice(good_extra)} {random.choice(good_extra)}"
-        )
-        paragraphs.append(
-            f"Pengalaman hidup {data['nama']} membentuknya menjadi individu yang dihormati dan menjadi teladan di komunitas. "
-            "Karakternya selalu berusaha melakukan kebaikan dan menegakkan keadilan."
-        )
+        paragraphs.append(f"{data['nama']} adalah karakter level {data['level']} yang hidup secara legal dan membantu masyarakat. Lahir pada {data['tgl_lahir']} di {data['kota']}, {data['nama']} dikenal disiplin dan bertanggung jawab.")
+        paragraphs.append(f"Sebagai {data['pekerjaan']}, {data['nama']} berperan aktif menjaga keamanan dan kesejahteraan komunitasnya. {random.choice(good_extra)} {random.choice(good_extra)}")
+        paragraphs.append(f"Pengalaman hidup {data['nama']} membentuknya menjadi individu yang dihormati dan menjadi teladan di komunitas. Karakternya selalu berusaha melakukan kebaikan dan menegakkan keadilan.")
     else:
-        paragraphs.append(
-            f"{data['nama']} hidup di dunia kriminal dan berjuang untuk bertahan di kerasnya kehidupan jalanan. "
-            f"Lahir pada {data['tgl_lahir']} di {data['kota']}, {data['nama']} memimpin gank dan mengatur wilayahnya."
-        )
-        paragraphs.append(
-            f"Sebagai {data['pekerjaan']}, {data['nama']} dikenal cerdik dan berani menghadapi lawan. "
-            f"{random.choice(bad_extra)} {random.choice(bad_extra)}"
-        )
-        paragraphs.append(
-            "Pengalaman hidup yang keras membentuk karakter kompleks, penuh strategi, keberanian, dan ketahanan. "
-            f"{data['nama']} selalu siap menghadapi konsekuensi dari setiap keputusan yang diambil."
-        )
-
+        paragraphs.append(f"{data['nama']} hidup di dunia kriminal dan berjuang untuk bertahan di kerasnya kehidupan jalanan. Lahir pada {data['tgl_lahir']} di {data['kota']}, {data['nama']} memimpin gank dan mengatur wilayahnya.")
+        paragraphs.append(f"Sebagai {data['pekerjaan']}, {data['nama']} dikenal cerdik dan berani menghadapi lawan. {random.choice(bad_extra)} {random.choice(bad_extra)}")
+        paragraphs.append(f"Pengalaman hidup yang keras membentuk karakter kompleks, penuh strategi, keberanian, dan ketahanan. {data['nama']} selalu siap menghadapi konsekuensi dari setiap keputusan yang diambil.")
     return "\n\n".join(paragraphs)
 
-# ====== COMMAND PANEL ======
+# ===== COMMAND PANEL =====
 @bot.command()
 async def cs(ctx):
     if ctx.channel.id != 1471225787129532641:
@@ -185,8 +162,7 @@ async def cs(ctx):
     )
 
     view = View()
-    view.add_item(Button(label="Buat Character Story", style=discord.ButtonStyle.primary, emoji="📝",
-                         custom_id="create_cs"))
+    view.add_item(Button(label="Buat Character Story", style=discord.ButtonStyle.primary, emoji="📝", custom_id="create_cs"))
 
     async def button_callback(interaction):
         await interaction.response.send_message("🌍 Silakan pilih server RP:", view=ServerView(), ephemeral=True)
@@ -194,6 +170,6 @@ async def cs(ctx):
     view.children[0].callback = button_callback
     await ctx.send(embed=embed, view=view)
 
-# ====== RUN BOT ======
+# ===== RUN BOT =====
 TOKEN = os.getenv("DISCORD_TOKEN")
 bot.run(TOKEN)
