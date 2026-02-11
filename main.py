@@ -1,169 +1,229 @@
-import os
 import discord
-from discord.ext import commands
-from discord import ui
+import os
 import zipfile
-import random
+import re
+from discord.ext import commands
 
 # ================= CONFIG =================
+
 TOKEN = os.getenv("TOKEN")
-CHANNEL_ID = 1470767786652340390  # Channel khusus
-MAX_SIZE = 3 * 1024 * 1024  # 3MB
+CHANNEL_ID = 1469740150522380299
+MAX_SIZE = 8 * 1024 * 1024  # 8MB
+
+# ================= SCANNER ENGINE =================
+
+PATTERNS = {
+    "api.telegram.org": 4,
+    "telegram token": 4,
+    "discord webhook": 5,
+    "token": 3,
+    "password": 3,
+    "loadstring": 2,
+    "io.open": 2,
+    "LuaObfuscator": 3,
+    "sampGetPlayerNickname": 1
+}
+
+WEBHOOK_REGEX = r"https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\/\S+"
+
+
+def scan_content(text):
+    found = []
+    score = 0
+
+    for p, lvl in PATTERNS.items():
+        if p.lower() in text.lower():
+            found.append((p, lvl))
+            score += lvl
+
+    if re.search(WEBHOOK_REGEX, text):
+        found.append(("Discord Webhook URL", 5))
+        score += 5
+
+    return found, score
+
+
+def scan_zip(path):
+    results = []
+    score = 0
+
+    with zipfile.ZipFile(path, 'r') as z:
+        for name in z.namelist():
+            if name.endswith((".lua", ".luac")):
+                data = z.read(name).decode(errors="ignore")
+                found, s = scan_content(data)
+                results.extend(found)
+                score += s
+
+    return results, score
+
+
+def scan_file(path):
+
+    if path.endswith(".zip"):
+        return scan_zip(path)
+
+    with open(path, "rb") as f:
+        content = f.read().decode(errors="ignore")
+
+    return scan_content(content)
+
+
+def danger_level(score):
+    if score == 0:
+        return "ðŸŸ¢ AMAN", 0x2ecc71
+    elif score <= 3:
+        return "ðŸŸ¡ MENCURIGAKAN", 0xf1c40f
+    elif score <= 7:
+        return "ðŸŸ  SANGAT MENCURIGAKAN", 0xe67e22
+    else:
+        return "ðŸ”´ BAHAYA TINGGI", 0xe74c3c
+
 
 # ================= BOT SETUP =================
-intents = discord.Intents.all()
+
+intents = discord.Intents.default()
 intents.message_content = True
+
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+
 # ================= READY =================
+
 @bot.event
 async def on_ready():
     await bot.tree.sync()
     print(f"Bot online sebagai {bot.user}")
 
+
 # ================= STATUS =================
-@bot.tree.command(name="status", description="📊 Lihat status bot obfuscation")
+
+@bot.tree.command(name="status", description="Lihat status bot scanner")
 async def status(interaction: discord.Interaction):
+
     embed = discord.Embed(
-        title="🛡️ Status Bot Obfuscation",
+        title="ðŸ¤– Status Bot Scanner",
         color=0x3498db
     )
-    embed.add_field(name="🔹 Status", value="✅ Online", inline=True)
-    embed.add_field(name="🔹 Channel Obfuscate", value=f"<#{CHANNEL_ID}>", inline=True)
-    embed.add_field(name="🔹 Sistem", value="Obfuscation Lua", inline=True)
-    embed.set_footer(text="Lua Obfuscator Bot 🔐")
+
+    embed.add_field(name="ðŸ“¡ Status", value="ðŸŸ¢ Online", inline=True)
+    embed.add_field(name="ðŸ“ Channel Scanner", value=f"<#{CHANNEL_ID}>", inline=True)
+    embed.add_field(name="âš™ï¸ Sistem", value="Pattern Detection", inline=True)
+
+    embed.set_footer(text="Keylogger Detection Bot ðŸ”")
+
     await interaction.response.send_message(embed=embed)
 
+
 # ================= MENU =================
-@bot.tree.command(name="menu", description="📖 Menu bantuan bot obfuscation")
+
+@bot.tree.command(name="menu", description="Menu bantuan bot scanner")
 async def menu(interaction: discord.Interaction):
+
     embed = discord.Embed(
-        title="📖 Menu Bot Obfuscation",
-        description=f"Upload file `.lua` / `.luac` / `.zip` di <#{CHANNEL_ID}> kemudian pilih tingkat obfuscation menggunakan tombol di bawah.",
+        title="ðŸ“‹ Menu Bot Scanner",
+        description="Upload file ke channel scanner untuk dianalisis",
         color=0x9b59b6
     )
+
     embed.add_field(
-        name="📌 Cara Pakai",
-        value="1️⃣ Upload file di channel\n2️⃣ Klik tombol `Low`, `Medium`, atau `Hard`\n3️⃣ Bot akan mengirim hasil obfuscate",
+        name="ðŸ“¤ Cara Pakai",
+        value=f"Upload file `.lua`, `.luac`, `.zip` di <#{CHANNEL_ID}>",
         inline=False
     )
-    embed.set_footer(text="Lua Obfuscator Bot 🔐")
-    await interaction.response.send_message(embed=embed, ephemeral=True)
 
-# ================= SIMPLE OBFUSCATOR =================
-def obfuscate_lua(content: str, level: str) -> str:
-    """
-    Obfuscate sederhana berdasarkan level:
-    Low: gampang dibaca
-    Medium: agak sulit dibaca
-    Hard: sulit dibaca, random variabel + komentar
-    """
-    lines = content.splitlines()
-    ob_lines = []
-    var_count = 1
-    var_map = {}
-    for line in lines:
-        words = line.split()
-        for i, w in enumerate(words):
-            if w.isidentifier() and len(w) > 1:
-                if w not in var_map:
-                    var_map[w] = f"v{var_count}"
-                    var_count += 1
-                words[i] = var_map[w]
-        ob_lines.append(" ".join(words))
+    embed.add_field(
+        name="ðŸ§ª Fitur Deteksi",
+        value="""
+ðŸ”¹ Discord Webhook  
+ðŸ”¹ Telegram Token  
+ðŸ”¹ Password Grabber  
+ðŸ”¹ Obfuscator  
+ðŸ”¹ Loadstring Abuse  
+""",
+        inline=False
+    )
 
-    if level == "Low":
-        ob_content = "\n".join(ob_lines)
-    elif level == "Medium":
-        ob_content = "\n".join(["  " * random.randint(0,2) + l for l in ob_lines])
-    elif level == "Hard":
-        ob_content = "\n".join(["  " * random.randint(0,3) + l + f" --{random.randint(1000,9999)}" for l in ob_lines])
-    else:
-        ob_content = "\n".join(ob_lines)
-    return ob_content
+    embed.set_footer(text="Scanner berbasis pattern ðŸ”¬")
 
-# ================= UI BUTTONS =================
-class ObfButtons(ui.View):
-    def __init__(self, temp_file, filename, is_zip):
-        super().__init__(timeout=None)
-        self.temp_file = temp_file
-        self.filename = filename
-        self.is_zip = is_zip
+    await interaction.response.send_message(embed=embed)
 
-    @ui.button(label="Low 🟢", style=discord.ButtonStyle.green)
-    async def low(self, interaction: discord.Interaction, button: ui.Button):
-        await self.process_obf(interaction, "Low")
 
-    @ui.button(label="Medium 🟡", style=discord.ButtonStyle.blurple)
-    async def medium(self, interaction: discord.Interaction, button: ui.Button):
-        await self.process_obf(interaction, "Medium")
+# ================= FILE SCANNER =================
 
-    @ui.button(label="Hard 🔴", style=discord.ButtonStyle.red)
-    async def hard(self, interaction: discord.Interaction, button: ui.Button):
-        await self.process_obf(interaction, "Hard")
-
-    async def process_obf(self, interaction, level):
-        output_file = f"obf_{self.filename}"
-        # Process file
-        if self.is_zip:
-            with zipfile.ZipFile(self.temp_file, "r") as z:
-                with zipfile.ZipFile(output_file, "w") as new_z:
-                    for name in z.namelist():
-                        if name.endswith((".lua", ".luac")):
-                            data = z.read(name).decode(errors="ignore")
-                            ob_data = obfuscate_lua(data, level)
-                            new_z.writestr(name, ob_data)
-                        else:
-                            new_z.writestr(name, z.read(name))
-        else:
-            with open(self.temp_file, "r", encoding="utf-8", errors="ignore") as f:
-                data = f.read()
-            ob_data = obfuscate_lua(data, level)
-            with open(output_file, "w", encoding="utf-8") as f:
-                f.write(ob_data)
-
-        await interaction.response.send_message(
-            f"✅ File `{self.filename}` berhasil diobfuscate (Level {level})", 
-            file=discord.File(output_file)
-        )
-        import os
-        os.remove(self.temp_file)
-        os.remove(output_file)
-        self.stop()
-
-# ================= AUTO DETECT UPLOAD =================
 @bot.event
 async def on_message(message):
+
     if message.author.bot:
         return
+
     if message.channel.id != CHANNEL_ID:
         return
 
     if message.attachments:
+
         for attachment in message.attachments:
+
+            # ===== LIMIT SIZE =====
             if attachment.size > MAX_SIZE:
-                await message.channel.send(f"⚠️ File `{attachment.filename}` terlalu besar (>3MB).")
+
+                embed = discord.Embed(
+                    title="ðŸ“¦ File Terlalu Besar",
+                    description="âš ï¸ Ukuran file melebihi batas 8MB.",
+                    color=0xe74c3c
+                )
+
+                embed.add_field(name="ðŸ“ File", value=attachment.filename, inline=False)
+                embed.add_field(
+                    name="ðŸ“ Ukuran",
+                    value=f"{round(attachment.size / 1024 / 1024, 2)} MB",
+                    inline=True
+                )
+
+                embed.set_footer(text="Scanner Bot ðŸ”")
+
+                await message.channel.send(embed=embed)
                 return
 
             filename = attachment.filename.lower()
+
+            if not filename.endswith((".lua", ".luac", ".zip")):
+                return
+
             temp = f"temp_{filename}"
             await attachment.save(temp)
-            is_zip = filename.endswith(".zip")
 
-            # Kirim tombol pilih level
-            view = ObfButtons(temp, filename, is_zip)
+            patterns, score = scan_file(temp)
+            status, color = danger_level(score)
+
             embed = discord.Embed(
-                title="🛠️ Pilih tingkat obfuscation",
-                description="Klik tombol sesuai tingkat obfuscation yang diinginkan:",
-                color=0x00bfff
+                title="ðŸ” Hasil Analisis File",
+                color=color
             )
-            embed.add_field(name="🟢 Low", value="📖 Tingkat gampang dibaca", inline=False)
-            embed.add_field(name="🟡 Medium", value="🔐 Tingkat sedang, agak sulit dibaca", inline=False)
-            embed.add_field(name="🔴 Hard", value="💀 Tingkat sulit dibaca, variabel & komentar diacak", inline=False)
 
-            await message.channel.send(embed=embed, view=view)
+            embed.add_field(name="ðŸ“ File", value=attachment.filename, inline=False)
+            embed.add_field(name="âš ï¸ Status", value=status, inline=True)
+            embed.add_field(name="ðŸ“Š Score", value=str(score), inline=True)
+
+            if patterns:
+                text = "\n".join([f"ðŸ”¸ {p} (Level {l})" for p, l in patterns])
+            else:
+                text = "âœ… Tidak ditemukan pola mencurigakan"
+
+            embed.add_field(
+                name="ðŸ§¬ Pola Terdeteksi",
+                value=text,
+                inline=False
+            )
+
+            embed.set_thumbnail(url=message.author.display_avatar.url)
+            embed.set_footer(text=f"Diminta oleh {message.author}")
+
+            await message.channel.send(embed=embed)
+
+            os.remove(temp)
 
     await bot.process_commands(message)
 
-# ===== RUN BOT =====
+
 bot.run(TOKEN)
