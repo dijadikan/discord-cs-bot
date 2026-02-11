@@ -7,8 +7,7 @@ import random
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Temp storage per user
-bot.user_temp = {}
+bot.user_temp = {}  # Temp storage per user
 
 # ===== SERVER SELECTION =====
 class ServerSelect(Select):
@@ -115,7 +114,6 @@ def generate_long_story(data):
         "Ia dikenal bijaksana dan menjadi teladan komunitas.",
         "Setiap tindakan Michael selalu bertujuan untuk kebaikan masyarakat."
     ]
-
     bad_extra = [
         "Tony menghadapi rival dan konflik antar gank dengan strategi matang.",
         "Pengaruhnya di kota terus bertambah berkat kecerdikannya.",
