@@ -1,229 +1,94 @@
-import discord
 import os
-import zipfile
-import re
-from discord.ext import commands
+import discord
+from discord import app_commands
+from discord.ext import commands, tasks
+import asyncio
 
-# ================= CONFIG =================
-
+# Ambil token dari environment variable
 TOKEN = os.getenv("TOKEN")
-CHANNEL_ID = 1469740150522380299
-MAX_SIZE = 8 * 1024 * 1024  # 8MB
-
-# ================= SCANNER ENGINE =================
-
-PATTERNS = {
-    "api.telegram.org": 4,
-    "telegram token": 4,
-    "discord webhook": 5,
-    "token": 3,
-    "password": 3,
-    "loadstring": 2,
-    "io.open": 2,
-    "LuaObfuscator": 3,
-    "sampGetPlayerNickname": 1
-}
-
-WEBHOOK_REGEX = r"https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\/\S+"
-
-
-def scan_content(text):
-    found = []
-    score = 0
-
-    for p, lvl in PATTERNS.items():
-        if p.lower() in text.lower():
-            found.append((p, lvl))
-            score += lvl
-
-    if re.search(WEBHOOK_REGEX, text):
-        found.append(("Discord Webhook URL", 5))
-        score += 5
-
-    return found, score
-
-
-def scan_zip(path):
-    results = []
-    score = 0
-
-    with zipfile.ZipFile(path, 'r') as z:
-        for name in z.namelist():
-            if name.endswith((".lua", ".luac")):
-                data = z.read(name).decode(errors="ignore")
-                found, s = scan_content(data)
-                results.extend(found)
-                score += s
-
-    return results, score
-
-
-def scan_file(path):
-
-    if path.endswith(".zip"):
-        return scan_zip(path)
-
-    with open(path, "rb") as f:
-        content = f.read().decode(errors="ignore")
-
-    return scan_content(content)
-
-
-def danger_level(score):
-    if score == 0:
-        return "ðŸŸ¢ AMAN", 0x2ecc71
-    elif score <= 3:
-        return "ðŸŸ¡ MENCURIGAKAN", 0xf1c40f
-    elif score <= 7:
-        return "ðŸŸ  SANGAT MENCURIGAKAN", 0xe67e22
-    else:
-        return "ðŸ”´ BAHAYA TINGGI", 0xe74c3c
-
-
-# ================= BOT SETUP =================
+if TOKEN is None:
+    print("Error: Token bot tidak ditemukan. Set environment variable TOKEN.")
+    exit()
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.voice_states = True
+intents.guilds = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-
-# ================= READY =================
+# Voice channel khusus
+VOICE_CHANNEL_ID = 1471285861546070172
+voice_client = None
 
 @bot.event
 async def on_ready():
-    await bot.tree.sync()
-    print(f"Bot online sebagai {bot.user}")
+    print(f"Bot siap sebagai {bot.user}")
+    try:
+        await bot.tree.sync()
+        print("Slash commands synced")
+    except Exception as e:
+        print(f"Gagal sync slash commands: {e}")
 
+    # Mulai loop auto join
+    auto_join_voice.start()
 
-# ================= STATUS =================
-
-@bot.tree.command(name="status", description="Lihat status bot scanner")
-async def status(interaction: discord.Interaction):
-
-    embed = discord.Embed(
-        title="ðŸ¤– Status Bot Scanner",
-        color=0x3498db
-    )
-
-    embed.add_field(name="ðŸ“¡ Status", value="ðŸŸ¢ Online", inline=True)
-    embed.add_field(name="ðŸ“ Channel Scanner", value=f"<#{CHANNEL_ID}>", inline=True)
-    embed.add_field(name="âš™ï¸ Sistem", value="Pattern Detection", inline=True)
-
-    embed.set_footer(text="Keylogger Detection Bot ðŸ”")
-
-    await interaction.response.send_message(embed=embed)
-
-
-# ================= MENU =================
-
-@bot.tree.command(name="menu", description="Menu bantuan bot scanner")
-async def menu(interaction: discord.Interaction):
-
-    embed = discord.Embed(
-        title="ðŸ“‹ Menu Bot Scanner",
-        description="Upload file ke channel scanner untuk dianalisis",
-        color=0x9b59b6
-    )
-
-    embed.add_field(
-        name="ðŸ“¤ Cara Pakai",
-        value=f"Upload file `.lua`, `.luac`, `.zip` di <#{CHANNEL_ID}>",
-        inline=False
-    )
-
-    embed.add_field(
-        name="ðŸ§ª Fitur Deteksi",
-        value="""
-ðŸ”¹ Discord Webhook  
-ðŸ”¹ Telegram Token  
-ðŸ”¹ Password Grabber  
-ðŸ”¹ Obfuscator  
-ðŸ”¹ Loadstring Abuse  
-""",
-        inline=False
-    )
-
-    embed.set_footer(text="Scanner berbasis pattern ðŸ”¬")
-
-    await interaction.response.send_message(embed=embed)
-
-
-# ================= FILE SCANNER =================
-
-@bot.event
-async def on_message(message):
-
-    if message.author.bot:
+# Loop untuk memastikan bot AFK di voice 24/7
+@tasks.loop(seconds=60)
+async def auto_join_voice():
+    global voice_client
+    channel = bot.get_channel(VOICE_CHANNEL_ID)
+    if channel is None:
+        print("Voice channel tidak ditemukan!")
         return
 
-    if message.channel.id != CHANNEL_ID:
+    try:
+        if voice_client is None or not voice_client.is_connected():
+            voice_client = await channel.connect()
+            await voice_client.edit(mute=True, deafen=True)
+            print(f"Bot berhasil join {channel.name} dan AFK (mute+deafen)")
+        elif not voice_client.is_deafened or not voice_client.is_muted:
+            # Pastikan tetap mute+deafen
+            await voice_client.edit(mute=True, deafen=True)
+    except Exception as e:
+        print(f"Error saat join voice: {e}")
+
+# /join - bot join voice channel user
+@bot.tree.command(name="join", description="Bot join voice channel kamu")
+async def join(interaction: discord.Interaction):
+    global voice_client
+    if interaction.user.voice is None:
+        await interaction.response.send_message("Kamu tidak berada di voice channel!", ephemeral=True)
         return
 
-    if message.attachments:
+    channel = interaction.user.voice.channel
 
-        for attachment in message.attachments:
+    try:
+        if voice_client is None or not voice_client.is_connected():
+            voice_client = await channel.connect()
+            await voice_client.edit(mute=True, deafen=True)
+            await interaction.response.send_message(f"✅ Bot berhasil join {channel.name} dan AFK (mute+deafen)")
+        else:
+            await interaction.response.send_message("Bot sudah berada di voice channel", ephemeral=True)
+    except Exception as e:
+        await interaction.response.send_message(f"Error join voice: {e}", ephemeral=True)
 
-            # ===== LIMIT SIZE =====
-            if attachment.size > MAX_SIZE:
+# /close - bot disconnect
+@bot.tree.command(name="close", description="Bot keluar dari voice channel")
+async def close(interaction: discord.Interaction):
+    global voice_client
+    if voice_client is not None and voice_client.is_connected():
+        await voice_client.disconnect()
+        voice_client = None
+        await interaction.response.send_message("✅ Bot keluar dari voice channel")
+    else:
+        await interaction.response.send_message("Bot tidak sedang berada di voice channel", ephemeral=True)
 
-                embed = discord.Embed(
-                    title="ðŸ“¦ File Terlalu Besar",
-                    description="âš ï¸ Ukuran file melebihi batas 8MB.",
-                    color=0xe74c3c
-                )
+# /ping - cek latency bot
+@bot.tree.command(name="ping", description="Cek latency bot")
+async def ping(interaction: discord.Interaction):
+    latency = round(bot.latency * 1000)
+    await interaction.response.send_message(f"Pong! Latency: {latency}ms")
 
-                embed.add_field(name="ðŸ“ File", value=attachment.filename, inline=False)
-                embed.add_field(
-                    name="ðŸ“ Ukuran",
-                    value=f"{round(attachment.size / 1024 / 1024, 2)} MB",
-                    inline=True
-                )
-
-                embed.set_footer(text="Scanner Bot ðŸ”")
-
-                await message.channel.send(embed=embed)
-                return
-
-            filename = attachment.filename.lower()
-
-            if not filename.endswith((".lua", ".luac", ".zip")):
-                return
-
-            temp = f"temp_{filename}"
-            await attachment.save(temp)
-
-            patterns, score = scan_file(temp)
-            status, color = danger_level(score)
-
-            embed = discord.Embed(
-                title="ðŸ” Hasil Analisis File",
-                color=color
-            )
-
-            embed.add_field(name="ðŸ“ File", value=attachment.filename, inline=False)
-            embed.add_field(name="âš ï¸ Status", value=status, inline=True)
-            embed.add_field(name="ðŸ“Š Score", value=str(score), inline=True)
-
-            if patterns:
-                text = "\n".join([f"ðŸ”¸ {p} (Level {l})" for p, l in patterns])
-            else:
-                text = "âœ… Tidak ditemukan pola mencurigakan"
-
-            embed.add_field(
-                name="ðŸ§¬ Pola Terdeteksi",
-                value=text,
-                inline=False
-            )
-
-            embed.set_thumbnail(url=message.author.display_avatar.url)
-            embed.set_footer(text=f"Diminta oleh {message.author}")
-
-            await message.channel.send(embed=embed)
-
-            os.remove(temp)
-
-    await bot.process_commands(message)
-
-
+# Jalankan bot
 bot.run(TOKEN)
