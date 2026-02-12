@@ -6,7 +6,8 @@ from discord import app_commands
 # ================= CONFIG =================
 
 TOKEN = os.getenv("TOKEN")
-OPF_CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
+
+OPF_CHANNEL_ID = 1470767786652340390
 VOICE_CHANNEL_ID = 1471285861546070172
 
 # ================= INTENTS =================
@@ -16,14 +17,18 @@ intents.message_content = True
 intents.voice_states = True
 intents.guilds = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(
+    command_prefix="!",
+    intents=intents
+)
 
 voice_client = None
 
-# ================= VOICE AUTO JOIN =================
+# ================= READY =================
 
 @bot.event
 async def on_ready():
+
     print(f"Online sebagai {bot.user}")
 
     try:
@@ -35,23 +40,38 @@ async def on_ready():
     auto_join_voice.start()
 
 
+# ================= AUTO JOIN VOICE =================
+
 @tasks.loop(seconds=60)
 async def auto_join_voice():
+
     global voice_client
 
     channel = bot.get_channel(VOICE_CHANNEL_ID)
 
-    if channel is None:
+    if not channel:
         return
 
     try:
+
         if voice_client is None or not voice_client.is_connected():
+
             voice_client = await channel.connect()
-            await voice_client.edit(mute=True, deafen=True)
+
+            await voice_client.edit(
+                mute=True,
+                deafen=True
+            )
+
             print("Voice connected")
 
-        elif not voice_client.is_deafened() or not voice_client.is_muted():
-            await voice_client.edit(mute=True, deafen=True)
+        else:
+
+            if not voice_client.is_muted():
+                await voice_client.edit(mute=True)
+
+            if not voice_client.is_deafened():
+                await voice_client.edit(deafen=True)
 
     except Exception as e:
         print(e)
@@ -64,7 +84,8 @@ async def join(interaction: discord.Interaction):
 
     global voice_client
 
-    if interaction.user.voice is None:
+    if not interaction.user.voice:
+
         await interaction.response.send_message(
             "Kamu tidak di voice",
             ephemeral=True
@@ -74,10 +95,15 @@ async def join(interaction: discord.Interaction):
     channel = interaction.user.voice.channel
 
     try:
+
         if voice_client is None or not voice_client.is_connected():
 
             voice_client = await channel.connect()
-            await voice_client.edit(mute=True, deafen=True)
+
+            await voice_client.edit(
+                mute=True,
+                deafen=True
+            )
 
             await interaction.response.send_message(
                 f"Join {channel.name}"
@@ -91,7 +117,11 @@ async def join(interaction: discord.Interaction):
             )
 
     except Exception as e:
-        await interaction.response.send_message(str(e), ephemeral=True)
+
+        await interaction.response.send_message(
+            str(e),
+            ephemeral=True
+        )
 
 
 @bot.tree.command(name="close")
@@ -102,9 +132,12 @@ async def close(interaction: discord.Interaction):
     if voice_client and voice_client.is_connected():
 
         await voice_client.disconnect()
+
         voice_client = None
 
-        await interaction.response.send_message("Voice disconnected")
+        await interaction.response.send_message(
+            "Voice disconnected"
+        )
 
     else:
 
@@ -124,12 +157,11 @@ async def ping(interaction: discord.Interaction):
     )
 
 
-# ================= LUA OBFUSCATOR =================
+# ================= LUA OPF =================
 
-def obfuscate_lua(code: str) -> str:
+def obfuscate_lua(code):
 
-    return f"""
--- Obfuscated by TTKPJ
+    return f"""-- Obfuscated by TTKPJ
 
 local function _TTKPJ_RUN()
 
@@ -141,7 +173,7 @@ _TTKPJ_RUN()
 """
 
 
-# ================= OPF SYSTEM =================
+# ================= OPF EVENT =================
 
 @bot.event
 async def on_message(message):
@@ -162,23 +194,34 @@ async def on_message(message):
     if not file.filename.lower().endswith(".lua"):
         return
 
-    input_path = f"input_{file.filename}"
-    output_path = f"opf_{file.filename}"
+    input_file = f"input_{file.filename}"
+    output_file = f"opf_{file.filename}"
 
     try:
 
-        await file.save(input_path)
+        await file.save(input_file)
 
-        with open(input_path, "r", encoding="utf-8", errors="ignore") as f:
+        with open(
+            input_file,
+            "r",
+            encoding="utf-8",
+            errors="ignore"
+        ) as f:
+
             code = f.read()
 
-        obf_code = obfuscate_lua(code)
+        obf = obfuscate_lua(code)
 
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(obf_code)
+        with open(
+            output_file,
+            "w",
+            encoding="utf-8"
+        ) as f:
+
+            f.write(obf)
 
         await message.channel.send(
-            file=discord.File(output_path)
+            file=discord.File(output_file)
         )
 
         try:
@@ -187,19 +230,20 @@ async def on_message(message):
             pass
 
         try:
-            os.remove(input_path)
+            os.remove(input_file)
         except:
             pass
 
         try:
-            os.remove(output_path)
+            os.remove(output_file)
         except:
             pass
 
     except Exception as e:
+
         print(e)
 
 
-# ================= RUN =================
+# ================= START =================
 
 bot.run(TOKEN)
