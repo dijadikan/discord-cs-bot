@@ -1,6 +1,5 @@
 import os
 import discord
-import asyncio
 from discord.ext import commands, tasks
 
 # ================= CONFIG =================
@@ -28,23 +27,34 @@ async def on_ready():
         await bot.tree.sync()
     except:
         pass
-    auto_join_voice.start()
+    print("Bot siap! Gunakan /join atau /close")
 
-# ================= AUTO JOIN VOICE =================
+# ================= SLASH COMMANDS =================
 
-@tasks.loop(seconds=60)
-async def auto_join_voice():
+@bot.tree.command(name="join", description="Bot join ke voice channel")
+async def join(interaction: discord.Interaction):
     global voice_client
     channel = bot.get_channel(VOICE_CHANNEL_ID)
     if not channel:
+        await interaction.response.send_message("Channel tidak ditemukan!", ephemeral=True)
         return
 
-    try:
-        if voice_client is None or not voice_client.is_connected():
-            voice_client = await channel.connect()
-            await voice_client.edit(mute=True, deafen=True)
-    except:
-        pass
+    if voice_client is None or not voice_client.is_connected():
+        voice_client = await channel.connect()
+        await voice_client.edit(mute=True, deafen=True)
+        await interaction.response.send_message(f"✅ Bergabung ke {channel.name}")
+    else:
+        await interaction.response.send_message("Bot sudah berada di voice channel!", ephemeral=True)
+
+@bot.tree.command(name="close", description="Bot disconnect dari voice channel")
+async def close(interaction: discord.Interaction):
+    global voice_client
+    if voice_client and voice_client.is_connected():
+        await voice_client.disconnect()
+        voice_client = None
+        await interaction.response.send_message("✅ Bot telah disconnect dari voice channel")
+    else:
+        await interaction.response.send_message("Bot tidak sedang berada di voice channel!", ephemeral=True)
 
 # ================= START =================
 
