@@ -1,7 +1,9 @@
 import os
 import discord
+import asyncio
+import random
+import string
 from discord.ext import commands, tasks
-from discord import app_commands
 
 # ================= CONFIG =================
 
@@ -17,10 +19,7 @@ intents.message_content = True
 intents.voice_states = True
 intents.guilds = True
 
-bot = commands.Bot(
-    command_prefix="!",
-    intents=intents
-)
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 voice_client = None
 
@@ -28,150 +27,53 @@ voice_client = None
 
 @bot.event
 async def on_ready():
-
     print(f"Online sebagai {bot.user}")
-
     try:
         await bot.tree.sync()
-        print("Slash command synced")
-    except Exception as e:
-        print(e)
-
+    except:
+        pass
     auto_join_voice.start()
-
 
 # ================= AUTO JOIN VOICE =================
 
 @tasks.loop(seconds=60)
 async def auto_join_voice():
-
     global voice_client
-
     channel = bot.get_channel(VOICE_CHANNEL_ID)
-
     if not channel:
         return
 
     try:
-
         if voice_client is None or not voice_client.is_connected():
-
             voice_client = await channel.connect()
+            await voice_client.edit(mute=True, deafen=True)
+    except:
+        pass
 
-            await voice_client.edit(
-                mute=True,
-                deafen=True
-            )
+# ================= LUA OBFUSCATOR =================
 
-            print("Voice connected")
-
-        else:
-
-            if not voice_client.is_muted():
-                await voice_client.edit(mute=True)
-
-            if not voice_client.is_deafened():
-                await voice_client.edit(deafen=True)
-
-    except Exception as e:
-        print(e)
-
-
-# ================= SLASH COMMAND =================
-
-@bot.tree.command(name="join")
-async def join(interaction: discord.Interaction):
-
-    global voice_client
-
-    if not interaction.user.voice:
-
-        await interaction.response.send_message(
-            "Kamu tidak di voice",
-            ephemeral=True
-        )
-        return
-
-    channel = interaction.user.voice.channel
-
-    try:
-
-        if voice_client is None or not voice_client.is_connected():
-
-            voice_client = await channel.connect()
-
-            await voice_client.edit(
-                mute=True,
-                deafen=True
-            )
-
-            await interaction.response.send_message(
-                f"Join {channel.name}"
-            )
-
-        else:
-
-            await interaction.response.send_message(
-                "Bot sudah di voice",
-                ephemeral=True
-            )
-
-    except Exception as e:
-
-        await interaction.response.send_message(
-            str(e),
-            ephemeral=True
-        )
-
-
-@bot.tree.command(name="close")
-async def close(interaction: discord.Interaction):
-
-    global voice_client
-
-    if voice_client and voice_client.is_connected():
-
-        await voice_client.disconnect()
-
-        voice_client = None
-
-        await interaction.response.send_message(
-            "Voice disconnected"
-        )
-
-    else:
-
-        await interaction.response.send_message(
-            "Bot tidak di voice",
-            ephemeral=True
-        )
-
-
-@bot.tree.command(name="ping")
-async def ping(interaction: discord.Interaction):
-
-    latency = round(bot.latency * 1000)
-
-    await interaction.response.send_message(
-        f"Pong {latency}ms"
-    )
-
-
-# ================= LUA OPF =================
+def random_string(length=12):
+    return ''.join(random.choice(string.ascii_letters) for _ in range(length))
 
 def obfuscate_lua(code):
+    wrapper_name = random_string()
+    junk_var = random_string()
 
-    return f"""-- Obfuscated by TTKPJ
+    obf = f"""
+-- TTKPJ OBF
 
-local function _TTKPJ_RUN()
+local {junk_var} = "{random_string(20)}"
+
+local function {wrapper_name}()
 
 {code}
 
 end
 
-_TTKPJ_RUN()
+{wrapper_name}()
 """
 
+    return obf
 
 # ================= OPF EVENT =================
 
@@ -194,41 +96,40 @@ async def on_message(message):
     if not file.filename.lower().endswith(".lua"):
         return
 
+    # Kirim animasi loading
+    loading = await message.channel.send("⏳ Sedang mengobfuscate file...")
+
     input_file = f"input_{file.filename}"
-    output_file = f"opf_{file.filename}"
+    output_file = f"obf_{file.filename}"
 
     try:
-
         await file.save(input_file)
 
-        with open(
-            input_file,
-            "r",
-            encoding="utf-8",
-            errors="ignore"
-        ) as f:
+        # Simulasi proses biar kelihatan real
+        await asyncio.sleep(2)
 
+        with open(input_file, "r", encoding="utf-8", errors="ignore") as f:
             code = f.read()
 
-        obf = obfuscate_lua(code)
+        obf_code = obfuscate_lua(code)
 
-        with open(
-            output_file,
-            "w",
-            encoding="utf-8"
-        ) as f:
-
-            f.write(obf)
+        with open(output_file, "w", encoding="utf-8") as f:
+            f.write(obf_code)
 
         await message.channel.send(
             file=discord.File(output_file)
         )
 
+        # Hapus pesan loading
+        await loading.delete()
+
+        # Hapus file asli user
         try:
             await message.delete()
         except:
             pass
 
+        # Hapus file temp
         try:
             os.remove(input_file)
         except:
@@ -240,9 +141,7 @@ async def on_message(message):
             pass
 
     except Exception as e:
-
-        print(e)
-
+        await loading.edit(content=f"Error: {e}")
 
 # ================= START =================
 
