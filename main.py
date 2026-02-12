@@ -1,32 +1,26 @@
 import os
 import discord
-import subprocess
-import zipfile
-from discord import app_commands
 from discord.ext import commands, tasks
+import asyncio
+import time
 
 TOKEN = os.getenv("TOKEN")
 
-if TOKEN is None:
-    print("Error: TOKEN tidak ditemukan")
+if not TOKEN:
+    print("TOKEN tidak ditemukan!")
     exit()
 
-intents = discord.Intents.default()
-intents.message_content = True
-intents.voice_states = True
-intents.guilds = True
+# intents full supaya stabil
+intents = discord.Intents.all()
 
-bot = commands.Bot(command_prefix="!", intents=intents)
-
-# =========================
-# ID CHANNEL (JANGAN DIUBAH)
-# =========================
+bot = commands.Bot(
+    command_prefix="!",
+    intents=intents,
+    reconnect=True
+)
 
 VOICE_CHANNEL_ID = 1471285861546070172
-OBF_CHANNEL_ID = 1470767786652340390
-
 voice_client = None
-
 
 # =========================
 # READY EVENT
@@ -34,171 +28,140 @@ voice_client = None
 
 @bot.event
 async def on_ready():
-
-    print(f"Bot siap sebagai {bot.user}")
+    print(f"✅ Bot online sebagai {bot.user}")
 
     try:
         await bot.tree.sync()
-        print("Slash commands synced")
+        print("✅ Slash command synced")
     except Exception as e:
-        print(e)
+        print(f"Sync error: {e}")
 
-    auto_join_voice.start()
-
+    if not auto_join_voice.is_running():
+        auto_join_voice.start()
 
 # =========================
-# AUTO JOIN VOICE 24/7
+# AUTO JOIN VOICE LOOP
 # =========================
 
 @tasks.loop(seconds=60)
 async def auto_join_voice():
-
     global voice_client
 
-    channel = bot.get_channel(VOICE_CHANNEL_ID)
-
-    if channel is None:
-        print("Voice channel tidak ditemukan")
-        return
-
     try:
+        channel = bot.get_channel(VOICE_CHANNEL_ID)
 
-        if voice_client is None or not voice_client.is_connected():
-
-            voice_client = await channel.connect()
-            await voice_client.edit(mute=True, deafen=True)
-
-            print(f"Join voice: {channel.name}")
-
-        elif not voice_client.is_muted or not voice_client.is_deafened:
-
-            await voice_client.edit(mute=True, deafen=True)
-
-    except Exception as e:
-
-        print("Voice error:", e)
-
-
-# =========================
-# AUTO OBFUSCATE LUA
-# =========================
-
-@bot.event
-async def on_message(message):
-
-    await bot.process_commands(message)
-
-    if message.author.bot:
-        return
-
-    if message.channel.id != OBF_CHANNEL_ID:
-        return
-
-    if not message.attachments:
-        return
-
-    for attachment in message.attachments:
-
-        if not attachment.filename.endswith(".lua"):
-
-            await message.reply("❌ Kirim file .lua saja")
+        if channel is None:
+            print("Voice channel tidak ditemukan")
             return
 
-        try:
-
-            await message.reply("⏳ Processing obfuscation...")
-
-            lua_path = f"temp_{attachment.filename}"
-            await attachment.save(lua_path)
-
-            luac_path = lua_path.replace(".lua", ".luac")
-
-            # compile lua -> luac
-            subprocess.run(
-                ["luac", "-o", luac_path, lua_path],
-                check=True
+        if voice_client is None or not voice_client.is_connected():
+            voice_client = await channel.connect(
+                reconnect=True,
+                timeout=30
             )
 
-            zip_path = luac_path + ".zip"
-
-            with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
-                zipf.write(luac_path, os.path.basename(luac_path))
-
-            await message.reply(
-                content="✅ Obfuscation berhasil",
-                file=discord.File(zip_path)
+            await voice_client.edit(
+                mute=True,
+                deafen=True
             )
 
-            # cleanup
-            os.remove(lua_path)
-            os.remove(luac_path)
-            os.remove(zip_path)
+            print(f"✅ Joined voice: {channel.name}")
 
-        except Exception as e:
+        else:
+            # pastikan tetap mute + deafen
+            if not voice_client.is_muted or not voice_client.is_deafened:
+                await voice_client.edit(
+                    mute=True,
+                    deafen=True
+                )
 
-            await message.reply(f"❌ Error: {e}")
-
+    except Exception as e:
+        print(f"Voice error: {e}")
+        voice_client = None
 
 # =========================
-# COMMAND JOIN
+# SLASH COMMAND JOIN
 # =========================
 
-@bot.tree.command(name="join", description="Join voice kamu")
+@bot.tree.command(name="join", description="Join voice channel kamu")
 async def join(interaction: discord.Interaction):
 
     global voice_client
 
-    if interaction.user.voice is None:
+    try:
 
+        if interaction.user.voice is None:
+            await interaction.response.send_message(
+                "Masuk voice channel dulu",
+                ephemeral=True
+            )
+            return
+
+        channel = interaction.user.voice.channel
+
+        if voice_client is None or not voice_client.is_connected():
+
+            voice_client = await channel.connect(
+                reconnect=True
+            )
+
+            await voice_client.edit(
+                mute=True,
+                deafen=True
+            )
+
+            await interaction.response.send_message(
+                f"Joined {channel.name}"
+            )
+
+        else:
+            await interaction.response.send_message(
+                "Bot sudah di voice",
+                ephemeral=True
+            )
+
+    except Exception as e:
         await interaction.response.send_message(
-            "Kamu tidak di voice",
+            f"Error: {e}",
             ephemeral=True
         )
-        return
-
-    channel = interaction.user.voice.channel
-
-    if voice_client is None:
-
-        voice_client = await channel.connect()
-
-    else:
-
-        await voice_client.move_to(channel)
-
-    await voice_client.edit(mute=True, deafen=True)
-
-    await interaction.response.send_message(
-        f"Join {channel.name}"
-    )
-
 
 # =========================
-# COMMAND CLOSE
+# SLASH COMMAND CLOSE
 # =========================
 
-@bot.tree.command(name="close", description="Keluar voice")
+@bot.tree.command(name="close", description="Disconnect voice")
 async def close(interaction: discord.Interaction):
 
     global voice_client
 
-    if voice_client:
+    try:
 
-        await voice_client.disconnect()
-        voice_client = None
+        if voice_client and voice_client.is_connected():
 
-        await interaction.response.send_message("Keluar voice")
+            await voice_client.disconnect()
 
-    else:
+            voice_client = None
 
+            await interaction.response.send_message(
+                "Disconnected"
+            )
+
+        else:
+
+            await interaction.response.send_message(
+                "Bot tidak di voice",
+                ephemeral=True
+            )
+
+    except Exception as e:
         await interaction.response.send_message(
-            "Tidak di voice",
+            f"Error: {e}",
             ephemeral=True
         )
 
-
 # =========================
-# COMMAND PING
+# PING
 # =========================
 
 @bot.tree.command(name="ping", description="Cek latency")
@@ -207,8 +170,32 @@ async def ping(interaction: discord.Interaction):
     latency = round(bot.latency * 1000)
 
     await interaction.response.send_message(
-        f"Pong {latency}ms"
+        f"Pong: {latency}ms"
     )
 
+# =========================
+# SUPER STABLE RUN LOOP
+# =========================
 
-bot.run(TOKEN)
+while True:
+
+    try:
+
+        print("Starting bot...")
+
+        bot.run(
+            TOKEN,
+            reconnect=True,
+            log_handler=None
+        )
+
+    except discord.errors.HTTPException as e:
+
+        print("Rate limited. Tunggu 30 detik...")
+        time.sleep(30)
+
+    except Exception as e:
+
+        print(f"Crash detected: {e}")
+        print("Restart dalam 15 detik...")
+        time.sleep(15)
