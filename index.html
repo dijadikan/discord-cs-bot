@@ -9,22 +9,19 @@
 
     <style>
         :root {
-            --primary-green: #2ecc71;
-            --glass: rgba(0, 0, 0, 0.75);
-            --border: rgba(255, 255, 255, 0.1);
+            /* Warna Hijau Neon untuk Aksen agar Serasi dengan Logo Baru */
+            --accent-green: #00ff88;
+            /* Nuansa Glassmorphism */
+            --glass-bg: rgba(0, 0, 0, 0.85);
+            --border: rgba(255, 255, 255, 0.15);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
         body {
-            /* BACKGROUND ANIME TEMA HITAM */
-            /* Ganti link di bawah ini untuk mengganti gambar background */
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+            /* BACKGROUND ANIME DARK */
+            /* Jaga agar gambar background tetap serasi */
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
                         url('https://images.alphacoders.com/132/1325712.png'); 
             background-size: cover;
             background-position: center;
@@ -36,69 +33,69 @@
             padding: 20px;
         }
 
-        /* CARD STYLE (Glassmorphism) */
+        /* CARD STYLE (Glassmorphism + Glow) */
         .main-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
             width: 100%;
             max-width: 420px;
             border-radius: 25px;
             border: 1px solid var(--border);
-            padding: 40px 30px;
+            padding: 50px 30px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            /* Menambahkan glow halus hijau di sekitar kartu */
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.1), 
+                        0 20px 60px rgba(0,0,0,0.7);
         }
 
-        /* LOGO / ICON IPHONE (Bisa Ganti Link) */
+        /* LOGO TG MAHKOTA RANTAI (Pusat Perhatian) */
         .logo-wrapper {
-            width: 90px;
-            height: 90px;
-            margin: 0 auto 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
+            width: 130px; /* Sedikit lebih besar untuk logo yang detail */
+            height: 130px;
+            margin: 0 auto 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--primary-green);
-            padding: 15px;
+            /* Efek Neon Glow khusus di logo */
+            filter: drop-shadow(0 0 10px var(--accent-green));
         }
 
         .logo-wrapper img {
             width: 100%;
             height: auto;
-            /* Filter ini membuat gambar menjadi putih/hijau cerah */
-            filter: drop-shadow(0 0 5px var(--primary-green));
+            border-radius: 50%; /* Membulatkan tampilan */
         }
 
         h1 {
             color: #fff;
-            font-size: 26px;
+            font-size: 28px;
             letter-spacing: 2px;
             margin-bottom: 5px;
             font-weight: 700;
         }
 
         .role-tag {
-            background: var(--primary-green);
-            color: #000;
+            background: rgba(0, 255, 136, 0.2); /* Semi transparan hijau */
+            color: var(--accent-green);
             font-size: 11px;
             font-weight: 700;
-            padding: 3px 12px;
+            padding: 4px 14px;
             border-radius: 50px;
             display: inline-block;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-transform: uppercase;
+            border: 1px solid rgba(0, 255, 136, 0.3);
         }
 
         .description {
-            color: #ddd;
+            color: #ccc;
             font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 30px;
+            line-height: 1.7;
+            margin-bottom: 35px;
         }
 
         .description b {
-            color: var(--primary-green);
+            color: var(--accent-green);
         }
 
         /* TOMBOL SOSIAL MEDIA */
@@ -112,14 +109,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 14px;
+            padding: 15px;
             border-radius: 12px;
             text-decoration: none;
             font-weight: 600;
             font-size: 15px;
             color: #fff;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.08);
         }
 
         .btn-discord { background: #5865F2; }
@@ -130,16 +127,17 @@
             margin-right: 12px;
         }
 
+        /* Hover Effect: Glowing & Lift */
         .btn:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
             filter: brightness(1.1);
         }
 
         .footer {
-            margin-top: 30px;
+            margin-top: 35px;
             font-size: 11px;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.25);
             letter-spacing: 1px;
         }
     </style>
@@ -148,7 +146,7 @@
 
     <div class="main-card">
         <div class="logo-wrapper">
-            <img src="https://img.icons8.com/?size=100&id=11739&format=png&color=2ecc71" alt="Mobile Icon">
+            <img src="image_1.png" alt="TG Crown Logo">
         </div>
 
         <h1>TATANG</h1>
