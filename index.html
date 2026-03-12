@@ -3,24 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TATANG COMMUNITY | SAMP</title>
+    <title>TATANG COMMUNITY | LUA DEVELOPER</title>
     
-    <meta name="description" content="Tatang Community - Komunitas SAMP Indonesia. Mod, Script, dan Inovasi.">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary-green: #2ecc71;
-            --dark-green: #27ae60;
-            --bg-light: #f4f7f6;
-            --text-main: #2c3e50;
+            --glass: rgba(0, 0, 0, 0.75);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
         body {
-            background-color: var(--bg-light);
-            color: var(--text-main);
+            /* BACKGROUND ANIME TEMA HITAM */
+            /* Ganti link di bawah ini untuk mengganti gambar background */
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.alphacoders.com/132/1325712.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -28,99 +36,143 @@
             padding: 20px;
         }
 
-        .card {
-            background: #ffffff;
-            max-width: 400px;
+        /* CARD STYLE (Glassmorphism) */
+        .main-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
             width: 100%;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 420px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            padding: 40px 30px;
             text-align: center;
-            border: 1px solid #e0e0e0;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
-        .header-img {
-            width: 100%;
-            height: 160px;
-            background: linear-gradient(135deg, var(--primary-green), #a8e063);
-            position: relative;
-        }
-
-        .logo-profile {
-            width: 100px;
-            height: 100px;
-            background: #fff;
+        /* LOGO / ICON IPHONE (Bisa Ganti Link) */
+        .logo-wrapper {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 50%;
-            position: absolute;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid #fff;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            border: 2px solid var(--primary-green);
+            padding: 15px;
         }
 
-        .logo-profile img { width: 70%; height: auto; }
+        .logo-wrapper img {
+            width: 100%;
+            height: auto;
+            /* Filter ini membuat gambar menjadi putih/hijau cerah */
+            filter: drop-shadow(0 0 5px var(--primary-green));
+        }
 
-        .content { padding: 60px 25px 35px; }
+        h1 {
+            color: #fff;
+            font-size: 26px;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
 
-        h1 { font-size: 24px; color: var(--primary-green); margin-bottom: 5px; text-transform: uppercase; }
-        .tagline { font-size: 14px; color: #7f8c8d; margin-bottom: 20px; font-weight: 600; }
-        p { font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 25px; }
+        .role-tag {
+            background: var(--primary-green);
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
 
-        .btn-container { display: flex; flex-direction: column; gap: 12px; }
+        .description {
+            color: #ddd;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .description b {
+            color: var(--primary-green);
+        }
+
+        /* TOMBOL SOSIAL MEDIA */
+        .btn-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 14px;
-            border-radius: 10px;
+            border-radius: 12px;
             text-decoration: none;
             font-weight: 600;
             font-size: 15px;
-            transition: 0.3s;
+            color: #fff;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .btn img { width: 20px; margin-right: 10px; }
+        .btn-discord { background: #5865F2; }
+        .btn-youtube { background: #FF0000; }
 
-        .btn-discord { background: #5865F2; color: #fff; }
-        .btn-youtube { background: #FF0000; color: #fff; }
+        .btn img {
+            width: 20px;
+            margin-right: 12px;
+        }
 
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            filter: brightness(1.1);
+        }
 
-        .footer { margin-top: 25px; font-size: 11px; color: #bdc3c7; }
+        .footer {
+            margin-top: 30px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div class="header-img">
-            <div class="logo-profile">
-                <img src="https://img.icons8.com/?size=100&id=30840&format=png&color=2ecc71" alt="Logo">
-            </div>
+    <div class="main-card">
+        <div class="logo-wrapper">
+            <img src="https://img.icons8.com/?size=100&id=11739&format=png&color=2ecc71" alt="Mobile Icon">
         </div>
 
-        <div class="content">
-            <h1>TATANG</h1>
-            <div class="tagline">SAMP COMMUNITY</div>
-            <p>Pusat pengembangan script, modifikasi, dan tempat berkumpulnya komunitas SAMP Indonesia yang solid.</p>
-            
-            <div class="btn-container">
-                <a href="https://discord.gg/LINK_ANDA" class="btn btn-discord" target="_blank">
-                    <img src="https://img.icons8.com/?size=100&id=30888&format=png&color=ffffff" alt="Icon">
-                    Join Discord
-                </a>
-                <a href="https://youtube.com/@tatangofficial" class="btn btn-youtube" target="_blank">
-                    <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=ffffff" alt="Icon">
-                    Subscribe YouTube
-                </a>
-            </div>
+        <h1>TATANG</h1>
+        <div class="role-tag">Monetloader Developer</div>
 
-            <div class="footer">© 2026 Tatang Community</div>
+        <p class="description">
+            Spesialis dalam pembuatan <b>File Lua Monetloader Script</b> untuk SAMP Mobile. 
+            Menyediakan fitur automasi, modifikasi visual, dan utility script berkualitas tinggi untuk komunitas.
+        </p>
+        
+        <div class="btn-list">
+            <a href="https://discord.gg/LINK_ANDA" class="btn btn-discord" target="_blank">
+                <img src="https://img.icons8.com/?size=100&id=30888&format=png&color=ffffff" alt="Icon">
+                Community Discord
+            </a>
+            
+            <a href="https://youtube.com/@tatangofficial" class="btn btn-youtube" target="_blank">
+                <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=ffffff" alt="Icon">
+                YouTube Channel
+            </a>
+        </div>
+
+        <div class="footer">
+            EST. 2026 • TATANG COMMUNITY
         </div>
     </div>
 
