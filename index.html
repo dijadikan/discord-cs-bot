@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TATANG COMMUNITY | SAMP</title>
+    
+    <meta name="description" content="Tatang Community - Komunitas SAMP Indonesia. Mod, Script, dan Inovasi.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --dark-green: #27ae60;
+            --bg-light: #f4f7f6;
+            --text-main: #2c3e50;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            max-width: 400px;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .header-img {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, var(--primary-green), #a8e063);
+            position: relative;
+        }
+
+        .logo-profile {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-profile img { width: 70%; height: auto; }
+
+        .content { padding: 60px 25px 35px; }
+
+        h1 { font-size: 24px; color: var(--primary-green); margin-bottom: 5px; text-transform: uppercase; }
+        .tagline { font-size: 14px; color: #7f8c8d; margin-bottom: 20px; font-weight: 600; }
+        p { font-size: 14px; line-height: 1.6; color: #555; margin-bottom: 25px; }
+
+        .btn-container { display: flex; flex-direction: column; gap: 12px; }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .btn img { width: 20px; margin-right: 10px; }
+
+        .btn-discord { background: #5865F2; color: #fff; }
+        .btn-youtube { background: #FF0000; color: #fff; }
+
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        .footer { margin-top: 25px; font-size: 11px; color: #bdc3c7; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="header-img">
+            <div class="logo-profile">
+                <img src="https://img.icons8.com/?size=100&id=30840&format=png&color=2ecc71" alt="Logo">
+            </div>
+        </div>
+
+        <div class="content">
+            <h1>TATANG</h1>
+            <div class="tagline">SAMP COMMUNITY</div>
+            <p>Pusat pengembangan script, modifikasi, dan tempat berkumpulnya komunitas SAMP Indonesia yang solid.</p>
+            
+            <div class="btn-container">
+                <a href="https://discord.gg/LINK_ANDA" class="btn btn-discord" target="_blank">
+                    <img src="https://img.icons8.com/?size=100&id=30888&format=png&color=ffffff" alt="Icon">
+                    Join Discord
+                </a>
+                <a href="https://youtube.com/@tatangofficial" class="btn btn-youtube" target="_blank">
+                    <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=ffffff" alt="Icon">
+                    Subscribe YouTube
+                </a>
+            </div>
+
+            <div class="footer">© 2026 Tatang Community</div>
+        </div>
+    </div>
+
+</body>
+</html>
