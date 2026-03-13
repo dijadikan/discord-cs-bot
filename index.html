@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tatang Dev - Monetloader Store</title>
+    <title>Tatang Store - Monetloader Service</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,93 +12,95 @@
         .neon-green { color: #39FF14; text-shadow: 0 0 10px #39FF14; }
         .btn-neon { background: #39FF14; color: black; font-weight: bold; transition: 0.3s; border-radius: 15px; }
         .btn-neon:hover { box-shadow: 0 0 25px #39FF14; transform: scale(1.05); }
-        .card-anim { transition: 0.4s; }
-        .card-anim:hover { border-color: #39FF14; transform: translateY(-5px); }
+        .sidebar { transition: 0.4s; transform: translateX(-100%); }
+        .sidebar.active { transform: translateX(0); }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen overflow-x-hidden">
 
-    <nav class="p-6 glass sticky top-0 z-50 flex justify-between items-center px-10">
-        <h1 class="text-2xl font-black italic neon-green tracking-tighter">TATANG<span class="text-white font-normal">STORE</span></h1>
-        <div class="flex gap-6 items-center">
-            <a href="https://youtube.com/@tatanglua" class="hover:neon-green transition text-xl"><i class="fab fa-youtube"></i></a>
-            <a href="https://tiktok.com/@tatang" class="hover:neon-green transition text-xl"><i class="fab fa-tiktok"></i></a>
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-64 glass z-[100] p-6 sidebar shadow-2xl">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="neon-green font-black text-xl italic uppercase">Menu</h2>
+            <button onclick="toggleMenu()" class="text-white text-3xl">&times;</button>
         </div>
+        <ul class="space-y-6 font-bold uppercase text-xs tracking-widest">
+            <li><a href="https://wa.me/628123456789" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-whatsapp text-lg"></i> Nomor WhatsApp</a></li>
+            <li><a href="https://whatsapp.com/channel/link-saluran-kamu" class="flex items-center gap-3 hover:neon-green transition"><i class="fas fa-bullhorn text-lg"></i> Saluran WhatsApp</a></li>
+            <li><a href="https://youtube.com/@tatanglua" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-youtube text-lg"></i> YouTube</a></li>
+            <li><a href="https://tiktok.com/@tatang" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-tiktok text-lg"></i> TikTok</a></li>
+        </ul>
+    </div>
+
+    <nav class="p-6 glass sticky top-0 z-50 flex justify-between items-center px-8">
+        <button onclick="toggleMenu()" class="text-2xl hover:neon-green transition"><i class="fas fa-bars"></i></button>
+        <h1 class="text-2xl font-black italic neon-green tracking-tighter">TATANG<span class="text-white font-normal">STORE</span></h1>
+        <div class="w-8"></div>
     </nav>
 
     <main class="flex-grow flex flex-col items-center justify-center p-6">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl md:text-6xl font-black uppercase italic tracking-widest mb-2">CUSTOM <span class="neon-green">SCRIPT</span></h2>
-            <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-xs">Monetloader Service • Fast Response</p>
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-black uppercase italic tracking-tighter mb-2 text-white italic">SCRIPT <span class="neon-green">MONET</span></h2>
+            <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-[10px]">Professional Lua Developer</p>
         </div>
 
-        <div class="glass p-10 rounded-[40px] w-full max-w-sm border-2 border-white/5 text-center card-anim shadow-2xl">
+        <div class="glass p-10 rounded-[40px] w-full max-w-sm border-2 border-white/5 text-center shadow-2xl relative overflow-hidden">
             <div class="mb-6">
-                <span class="bg-green-500/10 text-green-500 px-4 py-1 rounded-full text-[10px] font-bold uppercase">Best Seller</span>
-            </div>
-            <h3 class="text-2xl font-bold mb-2 italic">PER-SCRIPT</h3>
-            <div class="flex items-center justify-center gap-2 mb-8">
-                <span class="text-gray-500 line-through text-lg">Rp 50k</span>
-                <span class="text-4xl font-black neon-green">Rp 30.000</span>
+                <span class="bg-green-500/10 text-green-500 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-green-500/20">Fixed Price</span>
             </div>
             
-            <ul class="text-left space-y-4 mb-10 text-sm text-gray-400 font-medium">
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Full Source Code (No OBF)</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Support All Monetloader Version</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Free Revision / Debugging</li>
+            <div class="mb-8">
+                <p class="text-6xl font-black neon-green tracking-tighter italic">30K</p>
+                <p class="text-gray-500 text-[10px] font-bold mt-2 uppercase tracking-widest">Per - Request Script</p>
+            </div>
+            
+            <ul class="text-left space-y-3 mb-10 text-[11px] text-gray-400 font-bold uppercase">
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Full Source Code .lua</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> No Obfuscator (Open)</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Free Debugging Support</li>
             </ul>
 
-            <button onclick="openPayment()" class="w-full btn-neon py-4 uppercase tracking-widest text-sm">Beli & Bayar Sekarang</button>
+            <button onclick="openPayment()" class="w-full btn-neon py-4 uppercase tracking-widest text-xs">Beli Sekarang</button>
         </div>
     </main>
 
-    <div id="payment-modal" class="hidden fixed inset-0 bg-black/98 flex items-center justify-center p-4 z-[100]">
-        <div class="glass p-8 rounded-[40px] max-w-md w-full border-[#39FF14] border-2 shadow-[0_0_50px_rgba(57,255,20,0.1)] overflow-y-auto max-h-[90vh]">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="neon-green font-black text-xl italic uppercase underline">Checkout Panel</h3>
+    <div id="payment-modal" class="hidden fixed inset-0 bg-black/98 flex items-center justify-center p-4 z-[110]">
+        <div class="glass p-8 rounded-[40px] max-w-md w-full border-[#39FF14] border-2 text-center">
+            <div class="flex justify-between items-center mb-6 px-2">
+                <h3 class="neon-green font-black text-xl italic uppercase underline tracking-widest">Payment Info</h3>
                 <button onclick="closePayment()" class="text-white text-2xl">&times;</button>
             </div>
 
-            <div class="bg-white p-4 rounded-3xl mb-6 inline-block w-full text-center">
-                <img id="qris-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=081234567890" alt="QRIS Merchant" class="mx-auto w-56 h-56">
-                <p class="text-black font-black text-xs mt-2 uppercase">Scan QRIS Untuk Bayar 30k</p>
+            <div class="bg-white p-4 rounded-3xl mb-6 inline-block w-full">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=30000" alt="QRIS 30K" class="mx-auto w-52 h-52">
+                <p class="text-black font-black text-sm uppercase mt-2 italic">SCAN QRIS 30.000</p>
             </div>
 
-            <div class="space-y-4 text-left">
+            <div class="space-y-3 text-left">
                 <div class="glass p-4 rounded-2xl border border-white/10">
-                    <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">DANA / GOPAY</p>
-                    <p class="text-lg font-mono font-bold tracking-widest text-white">0812-3456-7890</p>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase mb-1 tracking-widest">DANA / GOPAY</p>
+                    <p class="text-lg font-mono font-bold text-white tracking-widest text-center">081234567890</p>
                 </div>
                 <div class="glass p-4 rounded-2xl border border-white/10">
-                    <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">SeaBank</p>
-                    <p class="text-lg font-mono font-bold tracking-widest text-white">9012-3456-7890</p>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase mb-1 tracking-widest">SeaBank</p>
+                    <p class="text-lg font-mono font-bold text-white tracking-widest text-center">901234567890</p>
                 </div>
             </div>
 
-            <p class="mt-6 text-[10px] text-gray-500 text-center uppercase leading-relaxed">
-                Setelah bayar, silakan kirim bukti transfer ke WhatsApp atau Discord admin untuk proses pembuatan script.
+            <p class="mt-6 text-[9px] text-gray-600 uppercase font-black tracking-widest">
+                Kirim Bukti Transfer ke WhatsApp Admin
             </p>
         </div>
     </div>
 
-    <footer class="p-8 text-center text-gray-600 text-[10px] font-bold uppercase tracking-widest">
-        &copy; 2026 Tatang Community • Developer Lua & Monetloader
-    </footer>
-
     <script>
-        function openPayment() {
-            document.getElementById('payment-modal').classList.remove('hidden');
-        }
-        function closePayment() {
-            document.getElementById('payment-modal').classList.add('hidden');
-        }
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); }
+        function openPayment() { document.getElementById('payment-modal').classList.remove('hidden'); }
+        function closePayment() { document.getElementById('payment-modal').classList.add('hidden'); }
 
-        // Menutup modal jika klik di luar area card
+        // Tutup modal jika klik di luar area
         window.onclick = function(event) {
             let modal = document.getElementById('payment-modal');
-            if (event.target == modal) {
-                closePayment();
-            }
+            if (event.target == modal) { closePayment(); }
         }
     </script>
 </body>
