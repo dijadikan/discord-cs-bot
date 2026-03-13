@@ -3,82 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tatang Scripting - Monetloader Service</title>
+    <title>Tatang Admin Panel - Monetloader</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #0a0a0a; color: white; }
-        .glass { 
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-        }
-        .neon-border { border-color: #39FF14; box-shadow: 0 0 10px #39FF14; }
+        body { background-color: #050505; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-text { color: #39FF14; text-shadow: 0 0 5px #39FF14; }
+        .sidebar { transition: 0.4s; transform: translateX(-100%); }
+        .sidebar.active { transform: translateX(0); }
+        input { background: rgba(255,255,255,0.05) !important; border: 1px solid #333 !important; color: white !important; }
     </style>
 </head>
-<body class="p-5">
+<body>
 
-    <header class="flex justify-between items-center mb-10">
-        <h1 class="text-2xl font-bold text-green-500">TATANG COMMUNITY</h1>
-        <nav class="space-x-4">
-            <a href="#" class="hover:text-green-400">Home</a>
-            <a href="#shop" class="hover:text-green-400">Buy Script</a>
-        </nav>
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-64 glass z-50 p-6 sidebar shadow-2xl">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="neon-text font-bold text-xl">MENU</h2>
+            <button onclick="toggleMenu()" class="text-white text-2xl">&times;</button>
+        </div>
+        <ul class="space-y-6 text-lg">
+            <li><a href="https://wa.me/yournumber" class="flex items-center gap-3 hover:text-green-400"><i class="fab fa-whatsapp"></i> WhatsApp Admin</a></li>
+            <li><a href="https://discord.gg/yourlink" class="flex items-center gap-3 hover:text-indigo-400"><i class="fab fa-discord"></i> Discord Community</a></li>
+            <li><a href="https://youtube.com/@tatanglua" class="flex items-center gap-3 hover:text-red-500"><i class="fab fa-youtube"></i> YouTube Channel</a></li>
+            <li><a href="https://tiktok.com/@youruser" class="flex items-center gap-3 hover:text-pink-400"><i class="fab fa-tiktok"></i> TikTok</a></li>
+        </ul>
+    </div>
+
+    <header class="p-5 flex justify-between items-center glass sticky top-0 z-40">
+        <button onclick="toggleMenu()" class="text-2xl hover:text-green-500 transition"><i class="fas fa-bars"></i></button>
+        <h1 class="font-black text-xl tracking-widest neon-text">TATANG<span class="text-white">DEV</span></h1>
+        <div id="admin-status" class="text-xs uppercase bg-red-600 px-2 py-1 rounded">Guest Mode</div>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <main class="p-6 max-w-5xl mx-auto">
         
-        <div class="glass p-6 rounded-2xl flex flex-col h-[500px]">
-            <h2 class="text-xl mb-4 font-semibold italic">Live Chat Admin</h2>
-            <div id="chat-box" class="flex-grow overflow-y-auto mb-4 p-2 space-y-2 border-b border-gray-700 text-sm">
-                <div class="bg-green-900/30 p-2 rounded-lg w-fit">Admin: Halo! Ada yang bisa saya bantu dengan script Monetloader Anda?</div>
-            </div>
-            <div class="flex gap-2">
-                <input type="text" id="user-msg" class="w-full bg-transparent border border-gray-600 rounded-lg p-2 focus:outline-none focus:border-green-500" placeholder="Ketik pesan...">
-                <button onclick="sendMessage()" class="bg-green-600 px-4 py-2 rounded-lg font-bold">Kirim</button>
-            </div>
+        <div id="login-section" class="max-w-md mx-auto mt-20 p-8 glass rounded-3xl text-center">
+            <i class="fas fa-user-shield text-5xl mb-4 neon-text"></i>
+            <h2 class="text-2xl font-bold mb-6">Admin Login</h2>
+            <input type="email" id="email" placeholder="Email" class="w-full p-3 rounded-lg mb-4 outline-none">
+            <input type="password" id="pass" placeholder="Password" class="w-full p-3 rounded-lg mb-6 outline-none">
+            <button onclick="checkLogin()" class="w-full bg-green-600 hover:bg-green-500 text-black font-bold py-3 rounded-xl transition">MASUK</button>
         </div>
 
-        <div id="shop" class="glass p-6 rounded-2xl border-l-4 border-green-500">
-            <h2 class="text-xl mb-4 font-semibold">Order Custom Script</h2>
-            <p class="text-gray-400 text-sm mb-4">Request Monetloader sepuasnya. Proses cepat & terpercaya.</p>
-            
-            <div class="space-y-4">
-                <div class="bg-white/5 p-4 rounded-lg flex justify-between items-center">
-                    <span>Custom Script (Request)</span>
-                    <span class="text-green-400 font-bold">Rp 50.000</span>
+        <div id="admin-dashboard" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass p-6 rounded-2xl h-[450px] flex flex-col">
+                    <h3 class="font-bold mb-4 border-b border-green-500 pb-2">Pesan Masuk (Admin Mode)</h3>
+                    <div id="chat-content" class="flex-grow overflow-y-auto space-y-3 mb-4 text-sm">
+                        </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="admin-reply" class="flex-grow p-2 rounded-lg" placeholder="Balas member...">
+                        <button onclick="sendReply()" class="bg-green-600 px-4 py-2 rounded-lg font-bold">Kirim</button>
+                    </div>
                 </div>
-                
-                <button onclick="openPayment()" class="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-green-500 transition">BELI SEKARANG</button>
-            </div>
-        </div>
-    </div>
 
-    <div id="pay-modal" class="hidden fixed inset-0 bg-black/80 flex justify-center items-center p-4">
-        <div class="glass p-8 rounded-3xl max-w-sm w-full text-center neon-border">
-            <h3 class="text-xl font-bold mb-4 text-green-500">Pembayaran Otomatis</h3>
-            <p class="mb-2 text-sm">Scan QRIS atau Transfer DANA:</p>
-            <img src="https://via.placeholder.com/200x200?text=QRIS+ADMIN" class="mx-auto mb-4 rounded-lg border-2 border-white">
-            <div class="bg-black/50 p-2 rounded mb-4">
-                <p class="text-xs text-gray-400 uppercase">Nomor DANA</p>
-                <p class="text-lg font-mono tracking-widest">0812-XXXX-XXXX</p>
+                <div class="glass p-6 rounded-2xl">
+                    <h3 class="font-bold mb-4 border-b border-green-500 pb-2">Panel Pembayaran</h3>
+                    <div class="p-4 bg-yellow-500/10 border border-yellow-500/50 rounded-lg mb-4 text-sm">
+                        <p><strong>Info Pembayaran:</strong></p>
+                        <p>DANA: 08xx-xxxx-xxxx</p>
+                        <p>QRIS: Aktif</p>
+                    </div>
+                    <button class="w-full py-2 bg-white text-black font-bold rounded-lg mb-3">Update QRIS</button>
+                    <button class="w-full py-2 border border-white rounded-lg">Log Pembelian</button>
+                </div>
             </div>
-            <button onclick="closePayment()" class="text-red-400 text-sm underline">Batalkan</button>
         </div>
-    </div>
+
+    </main>
 
     <script>
-        function openPayment() { document.getElementById('pay-modal').classList.remove('hidden'); }
-        function closePayment() { document.getElementById('pay-modal').classList.add('hidden'); }
-        
-        function sendMessage() {
-            const input = document.getElementById('user-msg');
-            if(input.value.trim() !== "") {
-                const box = document.getElementById('chat-box');
-                box.innerHTML += `<div class="bg-white/10 p-2 rounded-lg w-fit ml-auto">Anda: ${input.value}</div>`;
-                input.value = "";
-                box.scrollTop = box.scrollHeight;
+        // Fungsi Toggle Menu Sidebar
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        // Fungsi Login Admin
+        function checkLogin() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+
+            // Logika Login Sesuai Request
+            if(email === "dikasalto5@gmail.com" && pass === "admin") {
+                alert("Login Berhasil, Selamat Datang Tatang!");
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                document.getElementById('admin-status').innerText = "Admin Active";
+                document.getElementById('admin-status').classList.replace('bg-red-600', 'bg-green-600');
+            } else {
+                alert("Akses Ditolak! Email atau Password salah.");
+            }
+        }
+
+        // Simulasi Reply Chat
+        function sendReply() {
+            const msg = document.getElementById('admin-reply').value;
+            if(msg.trim() !== "") {
+                const chatBox = document.getElementById('chat-content');
+                chatBox.innerHTML += `<div class="bg-green-600/20 p-2 rounded-lg ml-auto w-fit border border-green-500">Admin: ${msg}</div>`;
+                document.getElementById('admin-reply').value = "";
+                chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
     </script>
 </body>
-                </html>
+</html>
