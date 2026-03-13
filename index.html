@@ -3,106 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tatang Admin Panel - Monetloader</title>
+    <title>Tatang Community - Monetloader Script</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #050505; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        body { background-color: #050505; color: #e0e0e0; }
         .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .neon-text { color: #39FF14; text-shadow: 0 0 5px #39FF14; }
+        .neon-border { border: 1px solid #39FF14; box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); }
         .sidebar { transition: 0.4s; transform: translateX(-100%); }
         .sidebar.active { transform: translateX(0); }
-        input { background: rgba(255,255,255,0.05) !important; border: 1px solid #333 !important; color: white !important; }
     </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
 
     <div id="sidebar" class="fixed inset-y-0 left-0 w-64 glass z-50 p-6 sidebar shadow-2xl">
         <div class="flex justify-between items-center mb-10">
-            <h2 class="neon-text font-bold text-xl">MENU</h2>
+            <h2 class="text-green-500 font-bold text-xl">TATANG DEV</h2>
             <button onclick="toggleMenu()" class="text-white text-2xl">&times;</button>
         </div>
-        <ul class="space-y-6 text-lg">
-            <li><a href="https://wa.me/yournumber" class="flex items-center gap-3 hover:text-green-400"><i class="fab fa-whatsapp"></i> WhatsApp Admin</a></li>
-            <li><a href="https://discord.gg/yourlink" class="flex items-center gap-3 hover:text-indigo-400"><i class="fab fa-discord"></i> Discord Community</a></li>
-            <li><a href="https://youtube.com/@tatanglua" class="flex items-center gap-3 hover:text-red-500"><i class="fab fa-youtube"></i> YouTube Channel</a></li>
-            <li><a href="https://tiktok.com/@youruser" class="flex items-center gap-3 hover:text-pink-400"><i class="fab fa-tiktok"></i> TikTok</a></li>
+        <ul class="space-y-6">
+            <li><a href="https://wa.me/your-number" class="flex items-center gap-3 hover:text-green-400 transition"><i class="fab fa-whatsapp"></i> WhatsApp Admin</a></li>
+            <li><a href="https://discord.gg/your-link" class="flex items-center gap-3 hover:text-indigo-400 transition"><i class="fab fa-discord"></i> Discord</a></li>
+            <li><a href="https://youtube.com/@tatanglua" class="flex items-center gap-3 hover:text-red-500 transition"><i class="fab fa-youtube"></i> YouTube</a></li>
+            <li><a href="https://tiktok.com/@your-user" class="flex items-center gap-3 hover:text-pink-400 transition"><i class="fab fa-tiktok"></i> TikTok</a></li>
         </ul>
     </div>
 
     <header class="p-5 flex justify-between items-center glass sticky top-0 z-40">
-        <button onclick="toggleMenu()" class="text-2xl hover:text-green-500 transition"><i class="fas fa-bars"></i></button>
-        <h1 class="font-black text-xl tracking-widest neon-text">TATANG<span class="text-white">DEV</span></h1>
-        <div id="admin-status" class="text-xs uppercase bg-red-600 px-2 py-1 rounded">Guest Mode</div>
+        <button onclick="toggleMenu()" class="text-2xl hover:text-green-500"><i class="fas fa-bars"></i></button>
+        <h1 class="font-bold text-xl tracking-tighter text-green-500">TATANG<span class="text-white">COMMUNITY</span></h1>
+        <div class="w-8"></div>
     </header>
 
-    <main class="p-6 max-w-5xl mx-auto">
+    <main class="p-6 max-w-4xl mx-auto space-y-8">
         
-        <div id="login-section" class="max-w-md mx-auto mt-20 p-8 glass rounded-3xl text-center">
-            <i class="fas fa-user-shield text-5xl mb-4 neon-text"></i>
-            <h2 class="text-2xl font-bold mb-6">Admin Login</h2>
-            <input type="email" id="email" placeholder="Email" class="w-full p-3 rounded-lg mb-4 outline-none">
-            <input type="password" id="pass" placeholder="Password" class="w-full p-3 rounded-lg mb-6 outline-none">
-            <button onclick="checkLogin()" class="w-full bg-green-600 hover:bg-green-500 text-black font-bold py-3 rounded-xl transition">MASUK</button>
-        </div>
+        <section class="text-center py-10">
+            <h2 class="text-4xl font-black mb-4">Request Monetloader <span class="text-green-500 italic">Sepuasnya</span></h2>
+            <p class="text-gray-400">Jasa pembuatan script Monetloader SAMP Mobile terpercaya dan cepat.</p>
+        </section>
 
-        <div id="admin-dashboard" class="hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="glass p-6 rounded-2xl h-[450px] flex flex-col">
-                    <h3 class="font-bold mb-4 border-b border-green-500 pb-2">Pesan Masuk (Admin Mode)</h3>
-                    <div id="chat-content" class="flex-grow overflow-y-auto space-y-3 mb-4 text-sm">
-                        </div>
-                    <div class="flex gap-2">
-                        <input type="text" id="admin-reply" class="flex-grow p-2 rounded-lg" placeholder="Balas member...">
-                        <button onclick="sendReply()" class="bg-green-600 px-4 py-2 rounded-lg font-bold">Kirim</button>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass p-6 rounded-2xl h-[450px] flex flex-col neon-border">
+                <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-comments text-green-500"></i> Chat Admin</h3>
+                <div id="chat-box" class="flex-grow overflow-y-auto mb-4 space-y-3 p-2 text-sm">
+                    <div class="bg-white/10 p-2 rounded-lg w-fit">Halo! Ada yang bisa kami bantu?</div>
                 </div>
-
-                <div class="glass p-6 rounded-2xl">
-                    <h3 class="font-bold mb-4 border-b border-green-500 pb-2">Panel Pembayaran</h3>
-                    <div class="p-4 bg-yellow-500/10 border border-yellow-500/50 rounded-lg mb-4 text-sm">
-                        <p><strong>Info Pembayaran:</strong></p>
-                        <p>DANA: 08xx-xxxx-xxxx</p>
-                        <p>QRIS: Aktif</p>
-                    </div>
-                    <button class="w-full py-2 bg-white text-black font-bold rounded-lg mb-3">Update QRIS</button>
-                    <button class="w-full py-2 border border-white rounded-lg">Log Pembelian</button>
+                <div class="flex gap-2">
+                    <input type="text" id="user-input" class="flex-grow bg-black/50 border border-gray-700 p-2 rounded-lg outline-none focus:border-green-500" placeholder="Ketik pesan...">
+                    <button onclick="userSend()" class="bg-green-600 px-4 py-2 rounded-lg text-black font-bold">Kirim</button>
                 </div>
             </div>
-        </div>
 
+            <div class="glass p-6 rounded-2xl flex flex-col justify-center items-center text-center">
+                <i class="fas fa-code text-5xl mb-4 text-green-500"></i>
+                <h3 class="text-xl font-bold mb-2">Custom Script Paket</h3>
+                <p class="text-gray-400 mb-6 text-sm">Akses request script premium tanpa batas.</p>
+                <div class="text-3xl font-mono mb-6">Rp 50.000</div>
+                <button onclick="openPay()" class="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-green-500 transition">BELI SEKARANG</button>
+            </div>
+        </div>
     </main>
 
+    <div id="pay-modal" class="hidden fixed inset-0 bg-black/90 flex justify-center items-center z-50 p-4">
+        <div class="glass p-8 rounded-3xl max-w-sm w-full text-center border border-green-500">
+            <h3 class="text-xl font-bold mb-4 text-green-500">PEMBAYARAN</h3>
+            <img src="https://via.placeholder.com/200x200?text=QRIS+TATANG" class="mx-auto mb-4 rounded-xl border-2 border-white">
+            <p class="text-sm mb-1 uppercase text-gray-400">Nomor DANA</p>
+            <p class="text-xl font-mono font-bold mb-6">0812-3456-7890</p>
+            <button onclick="closePay()" class="text-red-500 font-bold underline">TUTUP</button>
+        </div>
+    </div>
+
     <script>
-        // Fungsi Toggle Menu Sidebar
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-        }
-
-        // Fungsi Login Admin
-        function checkLogin() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
-
-            // Logika Login Sesuai Request
-            if(email === "dikasalto5@gmail.com" && pass === "admin") {
-                alert("Login Berhasil, Selamat Datang Tatang!");
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('admin-dashboard').classList.remove('hidden');
-                document.getElementById('admin-status').innerText = "Admin Active";
-                document.getElementById('admin-status').classList.replace('bg-red-600', 'bg-green-600');
-            } else {
-                alert("Akses Ditolak! Email atau Password salah.");
-            }
-        }
-
-        // Simulasi Reply Chat
-        function sendReply() {
-            const msg = document.getElementById('admin-reply').value;
-            if(msg.trim() !== "") {
-                const chatBox = document.getElementById('chat-content');
-                chatBox.innerHTML += `<div class="bg-green-600/20 p-2 rounded-lg ml-auto w-fit border border-green-500">Admin: ${msg}</div>`;
-                document.getElementById('admin-reply').value = "";
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); }
+        function openPay() { document.getElementById('pay-modal').classList.remove('hidden'); }
+        function closePay() { document.getElementById('pay-modal').classList.add('hidden'); }
+        
+        function userSend() {
+            const input = document.getElementById('user-input');
+            const chatBox = document.getElementById('chat-box');
+            if(input.value.trim() !== "") {
+                chatBox.innerHTML += `<div class="bg-green-600/20 p-2 rounded-lg ml-auto w-fit">Anda: ${input.value}</div>`;
+                input.value = "";
                 chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
