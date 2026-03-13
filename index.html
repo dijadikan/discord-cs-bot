@@ -20,7 +20,7 @@
 
     <div id="sidebar" class="fixed inset-y-0 left-0 w-64 glass z-[100] p-6 sidebar shadow-2xl">
         <div class="flex justify-between items-center mb-10">
-            <h2 class="neon-green font-black text-xl italic uppercase tracking-tighter">Menu</h2>
+            <h2 class="neon-green font-black text-xl italic uppercase tracking-tighter text-center">Tatang Dev</h2>
             <button onclick="toggleMenu()" class="text-white text-3xl">&times;</button>
         </div>
         <ul class="space-y-6 font-bold uppercase text-[11px] tracking-widest text-gray-300">
@@ -39,23 +39,28 @@
 
     <main class="flex-grow flex flex-col items-center justify-center p-6">
         <div class="text-center mb-10">
-            <h2 class="text-5xl md:text-6xl font-black uppercase italic tracking-tighter mb-2 text-white italic underline decoration-green-500/30">SCRIPT <span class="neon-green">MONET</span></h2>
-            <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-[10px]">Lua Specialist • Fast Respond</p>
+            <h2 class="text-5xl md:text-6xl font-black uppercase italic tracking-tighter mb-2 text-white italic underline decoration-green-500/30">LUA <span class="neon-green">SERVICE</span></h2>
+            <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-[10px]">Pengerjaan Cepat • 1 - 4 Jam Selesai</p>
         </div>
 
         <div class="glass p-10 rounded-[40px] w-full max-w-sm border-2 border-white/5 text-center shadow-2xl relative overflow-hidden transition-all duration-300 hover:border-green-500/20">
-            <div class="mb-6">
-                <span class="bg-green-500/10 text-green-500 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-green-500/20 shadow-inner">Fixed Price</span>
+            <div class="mb-6 relative">
+                <span class="bg-green-500/10 text-green-500 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-green-500/20 shadow-inner">Specialist Monetloader</span>
             </div>
+            
             <div class="mb-8">
                 <p class="text-6xl font-black neon-green tracking-tighter italic">30K</p>
-                <p class="text-gray-500 text-[10px] font-bold mt-2 uppercase tracking-widest">Per - Request Script</p>
+                <p class="text-gray-500 text-[10px] font-bold mt-2 uppercase tracking-widest">Fixed Price / Request</p>
             </div>
+            
             <ul class="text-left space-y-3 mb-10 text-[11px] text-gray-400 font-bold uppercase tracking-widest px-2">
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Full Source Code .lua</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> No Obfuscator (Open)</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Free Debugging Support</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Request Script Custom</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Custom Tema Mimgui</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> File No ENC (Open Source)</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Fix Script & Rename</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Proses Cepat (1-4 Jam)</li>
             </ul>
+
             <button onclick="openPayment()" class="w-full btn-neon py-4 uppercase tracking-widest text-xs shadow-lg">Beli Sekarang</button>
         </div>
     </main>
@@ -67,11 +72,8 @@
                 <button onclick="closePayment()" class="text-white hover:text-red-500 text-3xl font-black">&times;</button>
             </div>
 
-            <div class="bg-white p-4 rounded-3xl mb-4 inline-block w-full text-center shadow-2xl relative">
+            <div class="bg-white p-6 rounded-3xl mb-4 inline-block w-full text-center shadow-2xl">
                 <img id="qris-image" src="https://i.ibb.co.com/6RwM0DrR/Kode-QRIS-FYY-STORE.png" alt="QRIS FYY STORE" class="mx-auto w-56 h-56 rounded-2xl">
-                <a href="https://i.ibb.co.com/6RwM0DrR/Kode-QRIS-FYY-STORE.png" download="QRIS_FYY_STORE.png" class="mt-4 inline-flex items-center gap-2 text-black bg-gray-100 px-4 py-2 rounded-xl text-[10px] font-bold uppercase hover:bg-gray-200 transition">
-                    <i class="fas fa-download"></i> Download QRIS
-                </a>
             </div>
 
             <div class="space-y-3 text-left">
@@ -84,13 +86,13 @@
                 </div>
             </div>
 
-            <p class="mt-6 text-[10px] text-gray-600 uppercase font-black tracking-widest leading-relaxed">
-                Kirim Bukti Transfer ke WhatsApp Admin Tatang Dev
+            <p class="mt-8 text-[10px] text-gray-600 uppercase font-black tracking-widest leading-relaxed">
+                Info Lengkap Hubungi Admin Tatang Dev<br>Kirim bukti transfer ke WhatsApp
             </p>
         </div>
     </div>
 
-    <div id="copy-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-green-500 text-black px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest hidden z-[200]">
+    <div id="copy-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-green-500 text-black px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest hidden z-[200] shadow-2xl">
         Nomor Disalin!
     </div>
 
@@ -114,4 +116,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
