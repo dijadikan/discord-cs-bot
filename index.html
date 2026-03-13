@@ -3,83 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tatang Dev - Monetloader Service</title>
+    <title>Tatang Dev - Monetloader Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background-color: #050505; color: #eee; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .neon-green { color: #39FF14; text-shadow: 0 0 10px #39FF14; }
-        .btn-neon { background: #39FF14; color: black; font-weight: bold; transition: 0.3s; }
-        .btn-neon:hover { box-shadow: 0 0 20px #39FF14; transform: scale(1.05); }
+        .btn-neon { background: #39FF14; color: black; font-weight: bold; transition: 0.3s; border-radius: 15px; }
+        .btn-neon:hover { box-shadow: 0 0 25px #39FF14; transform: scale(1.05); }
+        .card-anim { transition: 0.4s; }
+        .card-anim:hover { border-color: #39FF14; transform: translateY(-5px); }
     </style>
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
 
-    <nav class="p-5 glass sticky top-0 z-50 flex justify-between items-center px-8">
-        <h1 class="text-xl font-black italic neon-green">TATANG<span class="text-white font-normal text-sm">COMMUNITY</span></h1>
-        <div class="flex gap-4">
-            <a href="https://youtube.com/@tatanglua" class="hover:neon-green"><i class="fab fa-youtube text-xl"></i></a>
-            <a href="https://discord.gg/linkmu" class="hover:neon-green"><i class="fab fa-discord text-xl"></i></a>
+    <nav class="p-6 glass sticky top-0 z-50 flex justify-between items-center px-10">
+        <h1 class="text-2xl font-black italic neon-green tracking-tighter">TATANG<span class="text-white font-normal">STORE</span></h1>
+        <div class="flex gap-6 items-center">
+            <a href="https://youtube.com/@tatanglua" class="hover:neon-green transition text-xl"><i class="fab fa-youtube"></i></a>
+            <a href="https://tiktok.com/@tatang" class="hover:neon-green transition text-xl"><i class="fab fa-tiktok"></i></a>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-6 mt-10">
-        <div class="text-center mb-16">
-            <h2 class="text-5xl font-extrabold mb-4 uppercase tracking-tighter">Monetloader <span class="neon-green italic">Scripting</span></h2>
-            <p class="text-gray-400">Jasa scripting Monetloader SAMP Mobile. Request sepuasnya, no ribet.</p>
+    <main class="flex-grow flex flex-col items-center justify-center p-6">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-6xl font-black uppercase italic tracking-widest mb-2">CUSTOM <span class="neon-green">SCRIPT</span></h2>
+            <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-xs">Monetloader Service • Fast Response</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="glass p-8 rounded-3xl border-l-4 border-[#39FF14]">
-                <h3 class="text-xl font-bold mb-4 uppercase italic">Chat Admin</h3>
-                <p class="text-xs text-gray-400 mb-6 font-bold uppercase tracking-widest">Kirim Request Script:</p>
-                <textarea id="pesan-user" rows="4" class="w-full bg-black/40 border border-gray-800 p-4 rounded-xl mb-4 focus:outline-none focus:border-[#39FF14] text-sm" placeholder="Contoh: Bang, buatin script vehicle spawner yang bisa auto warp..."></textarea>
-                <button onclick="kirimWA()" class="w-full btn-neon py-4 rounded-xl flex justify-center items-center gap-2">
-                    <i class="fab fa-whatsapp text-xl"></i> KIRIM KE WHATSAPP
-                </button>
+        <div class="glass p-10 rounded-[40px] w-full max-w-sm border-2 border-white/5 text-center card-anim shadow-2xl">
+            <div class="mb-6">
+                <span class="bg-green-500/10 text-green-500 px-4 py-1 rounded-full text-[10px] font-bold uppercase">Best Seller</span>
             </div>
+            <h3 class="text-2xl font-bold mb-2 italic">PER-SCRIPT</h3>
+            <div class="flex items-center justify-center gap-2 mb-8">
+                <span class="text-gray-500 line-through text-lg">Rp 50k</span>
+                <span class="text-4xl font-black neon-green">Rp 30.000</span>
+            </div>
+            
+            <ul class="text-left space-y-4 mb-10 text-sm text-gray-400 font-medium">
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Full Source Code (No OBF)</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Support All Monetloader Version</li>
+                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Free Revision / Debugging</li>
+            </ul>
 
-            <div class="glass p-8 rounded-3xl border-t-4 border-white/10 text-center">
-                <h3 class="text-xl font-bold mb-2 uppercase">Custom Script</h3>
-                <p class="text-3xl font-mono neon-green mb-6">Rp 50.000</p>
-                <div class="space-y-3 mb-8 text-left text-xs text-gray-400 uppercase font-bold px-4">
-                    <p><i class="fas fa-check text-green-500 mr-2"></i> Request Sepuasnya</p>
-                    <p><i class="fas fa-check text-green-500 mr-2"></i> Anti-Error / Debugging</p>
-                    <p><i class="fas fa-check text-green-500 mr-2"></i> No Obfuscation</p>
-                </div>
-                <button onclick="showPay()" class="w-full py-4 rounded-xl border border-white/20 hover:bg-white hover:text-black transition font-bold uppercase tracking-widest">Beli Sekarang</button>
-            </div>
+            <button onclick="openPayment()" class="w-full btn-neon py-4 uppercase tracking-widest text-sm">Beli & Bayar Sekarang</button>
         </div>
     </main>
 
-    <div id="modal-pay" class="hidden fixed inset-0 bg-black/95 flex items-center justify-center p-6 z-[60]">
-        <div class="glass p-10 rounded-[40px] max-w-sm w-full text-center border-[#39FF14] border shadow-[0_0_30px_rgba(57,255,20,0.2)]">
-            <h3 class="neon-green font-bold text-xl mb-6 tracking-widest italic underline">PAYMENT METHOD</h3>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=081234567890" class="mx-auto rounded-2xl mb-6 border-4 border-white">
-            <p class="text-[10px] text-gray-500 uppercase mb-1">Transfer DANA / QRIS</p>
-            <p class="text-2xl font-black tracking-[0.2em]">0812-XXXX-XXXX</p>
-            <button onclick="showPay()" class="mt-8 text-red-500 text-xs font-bold underline uppercase">Close</button>
+    <div id="payment-modal" class="hidden fixed inset-0 bg-black/98 flex items-center justify-center p-4 z-[100]">
+        <div class="glass p-8 rounded-[40px] max-w-md w-full border-[#39FF14] border-2 shadow-[0_0_50px_rgba(57,255,20,0.1)] overflow-y-auto max-h-[90vh]">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="neon-green font-black text-xl italic uppercase underline">Checkout Panel</h3>
+                <button onclick="closePayment()" class="text-white text-2xl">&times;</button>
+            </div>
+
+            <div class="bg-white p-4 rounded-3xl mb-6 inline-block w-full text-center">
+                <img id="qris-img" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=081234567890" alt="QRIS Merchant" class="mx-auto w-56 h-56">
+                <p class="text-black font-black text-xs mt-2 uppercase">Scan QRIS Untuk Bayar 30k</p>
+            </div>
+
+            <div class="space-y-4 text-left">
+                <div class="glass p-4 rounded-2xl border border-white/10">
+                    <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">DANA / GOPAY</p>
+                    <p class="text-lg font-mono font-bold tracking-widest text-white">0812-3456-7890</p>
+                </div>
+                <div class="glass p-4 rounded-2xl border border-white/10">
+                    <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">SeaBank</p>
+                    <p class="text-lg font-mono font-bold tracking-widest text-white">9012-3456-7890</p>
+                </div>
+            </div>
+
+            <p class="mt-6 text-[10px] text-gray-500 text-center uppercase leading-relaxed">
+                Setelah bayar, silakan kirim bukti transfer ke WhatsApp atau Discord admin untuk proses pembuatan script.
+            </p>
         </div>
     </div>
 
-    <script>
-        // GANTI NOMOR WA KAMU DI SINI (Wajib pakai 62 di depan)
-        const noWA = "6289515000822"; 
+    <footer class="p-8 text-center text-gray-600 text-[10px] font-bold uppercase tracking-widest">
+        &copy; 2026 Tatang Community • Developer Lua & Monetloader
+    </footer>
 
-        function kirimWA() {
-            const pesan = document.getElementById('pesan-user').value;
-            if (pesan.trim() === "") {
-                alert("Isi pesannya dulu bang!");
-                return;
-            }
-            // Kirim ke WA dengan format pesan yang rapi
-            const teksFull = `Halo Tatang Dev, saya mau request script:\n\n"${pesan}"`;
-            window.open(`https://wa.me/${noWA}?text=${encodeURIComponent(teksFull)}`, '_blank');
+    <script>
+        function openPayment() {
+            document.getElementById('payment-modal').classList.remove('hidden');
+        }
+        function closePayment() {
+            document.getElementById('payment-modal').classList.add('hidden');
         }
 
-        function showPay() {
-            document.getElementById('modal-pay').classList.toggle('hidden');
+        // Menutup modal jika klik di luar area card
+        window.onclick = function(event) {
+            let modal = document.getElementById('payment-modal');
+            if (event.target == modal) {
+                closePayment();
+            }
         }
     </script>
 </body>
