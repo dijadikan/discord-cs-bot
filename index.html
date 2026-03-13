@@ -3,89 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tatang Community - Monetloader Script</title>
+    <title>Tatang Monetloader Service</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #050505; color: #e0e0e0; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .neon-border { border: 1px solid #39FF14; box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); }
-        .sidebar { transition: 0.4s; transform: translateX(-100%); }
-        .sidebar.active { transform: translateX(0); }
+        body { background-color: #050505; color: #eee; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .neon-green { color: #39FF14; text-shadow: 0 0 10px #39FF14; }
+        .btn-neon { background: #39FF14; color: black; font-weight: bold; transition: 0.3s; }
+        .btn-neon:hover { box-shadow: 0 0 20px #39FF14; transform: scale(1.05); }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body>
 
-    <div id="sidebar" class="fixed inset-y-0 left-0 w-64 glass z-50 p-6 sidebar shadow-2xl">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-green-500 font-bold text-xl">TATANG DEV</h2>
-            <button onclick="toggleMenu()" class="text-white text-2xl">&times;</button>
+    <nav class="p-5 glass sticky top-0 z-50 flex justify-between items-center px-8">
+        <h1 class="text-xl font-black italic neon-green">TATANG<span class="text-white font-normal">DEV</span></h1>
+        <div class="flex gap-4">
+            <a href="https://discord.gg/linkmu" class="hover:neon-green"><i class="fab fa-discord"></i></a>
+            <a href="https://youtube.com/@tatanglua" class="hover:neon-green"><i class="fab fa-youtube"></i></a>
+            <button onclick="showAdmin()" class="text-xs opacity-30 hover:opacity-100">Admin</button>
         </div>
-        <ul class="space-y-6">
-            <li><a href="https://wa.me/your-number" class="flex items-center gap-3 hover:text-green-400 transition"><i class="fab fa-whatsapp"></i> WhatsApp Admin</a></li>
-            <li><a href="https://discord.gg/your-link" class="flex items-center gap-3 hover:text-indigo-400 transition"><i class="fab fa-discord"></i> Discord</a></li>
-            <li><a href="https://youtube.com/@tatanglua" class="flex items-center gap-3 hover:text-red-500 transition"><i class="fab fa-youtube"></i> YouTube</a></li>
-            <li><a href="https://tiktok.com/@your-user" class="flex items-center gap-3 hover:text-pink-400 transition"><i class="fab fa-tiktok"></i> TikTok</a></li>
-        </ul>
-    </div>
+    </nav>
 
-    <header class="p-5 flex justify-between items-center glass sticky top-0 z-40">
-        <button onclick="toggleMenu()" class="text-2xl hover:text-green-500"><i class="fas fa-bars"></i></button>
-        <h1 class="font-bold text-xl tracking-tighter text-green-500">TATANG<span class="text-white">COMMUNITY</span></h1>
-        <div class="w-8"></div>
-    </header>
+    <main class="max-w-4xl mx-auto p-6 mt-10">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-extrabold mb-4 uppercase tracking-tighter">Monetloader <span class="neon-green">Scripting</span></h2>
+            <p class="text-gray-400">Request script sepuasnya, fast respond & anti-error.</p>
+        </div>
 
-    <main class="p-6 max-w-4xl mx-auto space-y-8">
-        
-        <section class="text-center py-10">
-            <h2 class="text-4xl font-black mb-4">Request Monetloader <span class="text-green-500 italic">Sepuasnya</span></h2>
-            <p class="text-gray-400">Jasa pembuatan script Monetloader SAMP Mobile terpercaya dan cepat.</p>
-        </section>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="glass p-6 rounded-2xl h-[450px] flex flex-col neon-border">
-                <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-comments text-green-500"></i> Chat Admin</h3>
-                <div id="chat-box" class="flex-grow overflow-y-auto mb-4 space-y-3 p-2 text-sm">
-                    <div class="bg-white/10 p-2 rounded-lg w-fit">Halo! Ada yang bisa kami bantu?</div>
-                </div>
-                <div class="flex gap-2">
-                    <input type="text" id="user-input" class="flex-grow bg-black/50 border border-gray-700 p-2 rounded-lg outline-none focus:border-green-500" placeholder="Ketik pesan...">
-                    <button onclick="userSend()" class="bg-green-600 px-4 py-2 rounded-lg text-black font-bold">Kirim</button>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="glass p-8 rounded-3xl border-l-4 border-[#39FF14]">
+                <h3 class="text-xl font-bold mb-4 italic">Chat Admin</h3>
+                <p class="text-sm text-gray-400 mb-6">Butuh bantuan atau mau tanya-tanya? Langsung chat Tatang sekarang.</p>
+                <textarea id="pesan-user" class="w-full bg-black/40 border border-gray-800 p-4 rounded-xl mb-4 focus:outline-none focus:border-[#39FF14]" placeholder="Halo bang, mau request script..."></textarea>
+                <button onclick="kirimWA()" class="w-full btn-neon py-3 rounded-xl flex justify-center items-center gap-2">
+                    <i class="fab fa-whatsapp text-xl"></i> KIRIM PESAN
+                </button>
             </div>
 
-            <div class="glass p-6 rounded-2xl flex flex-col justify-center items-center text-center">
-                <i class="fas fa-code text-5xl mb-4 text-green-500"></i>
-                <h3 class="text-xl font-bold mb-2">Custom Script Paket</h3>
-                <p class="text-gray-400 mb-6 text-sm">Akses request script premium tanpa batas.</p>
-                <div class="text-3xl font-mono mb-6">Rp 50.000</div>
-                <button onclick="openPay()" class="w-full bg-white text-black font-bold py-3 rounded-xl hover:bg-green-500 transition">BELI SEKARANG</button>
+            <div class="glass p-8 rounded-3xl border-t-4 border-white/10 text-center">
+                <h3 class="text-xl font-bold mb-2 uppercase">Paket Member</h3>
+                <p class="text-3xl font-mono neon-green mb-6">Rp 50.000</p>
+                <ul class="text-xs text-gray-500 text-left mb-8 space-y-2">
+                    <li><i class="fas fa-check text-green-500"></i> Request Script Sepuasnya</li>
+                    <li><i class="fas fa-check text-green-500"></i> Full Support 24/7</li>
+                    <li><i class="fas fa-check text-green-500"></i> No Obfuscator (Open Code)</li>
+                </ul>
+                <button onclick="showPay()" class="w-full py-3 rounded-xl border border-white/20 hover:bg-white hover:text-black transition font-bold">BELI SEKARANG</button>
             </div>
         </div>
     </main>
 
-    <div id="pay-modal" class="hidden fixed inset-0 bg-black/90 flex justify-center items-center z-50 p-4">
-        <div class="glass p-8 rounded-3xl max-w-sm w-full text-center border border-green-500">
-            <h3 class="text-xl font-bold mb-4 text-green-500">PEMBAYARAN</h3>
-            <img src="https://via.placeholder.com/200x200?text=QRIS+TATANG" class="mx-auto mb-4 rounded-xl border-2 border-white">
-            <p class="text-sm mb-1 uppercase text-gray-400">Nomor DANA</p>
-            <p class="text-xl font-mono font-bold mb-6">0812-3456-7890</p>
-            <button onclick="closePay()" class="text-red-500 font-bold underline">TUTUP</button>
+    <div id="modal-pay" class="hidden fixed inset-0 bg-black/95 flex items-center justify-center p-6 z-[60]">
+        <div class="glass p-8 rounded-[40px] max-w-sm w-full text-center border-[#39FF14] border">
+            <h3 class="neon-green font-bold text-xl mb-6 tracking-widest italic">PAYMENT CENTER</h3>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=ISI_NOMOR_DANA_KAMU" class="mx-auto rounded-2xl mb-6 shadow-[0_0_15px_rgba(57,255,20,0.3)]">
+            <p class="text-xs text-gray-500 uppercase">Nomor Dana / QRIS</p>
+            <p class="text-2xl font-black tracking-widest">0812-XXXX-XXXX</p>
+            <button onclick="showPay()" class="mt-8 text-red-500 text-xs font-bold underline">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="modal-admin" class="hidden fixed inset-0 bg-black/95 flex items-center justify-center p-6 z-[60]">
+        <div class="glass p-8 rounded-3xl max-w-sm w-full text-center">
+            <h3 class="font-bold mb-6">ADMIN LOGIN</h3>
+            <input type="email" id="adm-email" placeholder="Email" class="w-full bg-black p-3 rounded-lg mb-4 border border-gray-800 outline-none">
+            <input type="password" id="adm-pass" placeholder="Password" class="w-full bg-black p-3 rounded-lg mb-6 border border-gray-800 outline-none">
+            <button onclick="loginAdmin()" class="w-full py-3 btn-neon rounded-lg">MASUK</button>
+            <button onclick="showAdmin()" class="mt-4 text-gray-500 text-xs font-bold">BATAL</button>
         </div>
     </div>
 
     <script>
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); }
-        function openPay() { document.getElementById('pay-modal').classList.remove('hidden'); }
-        function closePay() { document.getElementById('pay-modal').classList.add('hidden'); }
-        
-        function userSend() {
-            const input = document.getElementById('user-input');
-            const chatBox = document.getElementById('chat-box');
-            if(input.value.trim() !== "") {
-                chatBox.innerHTML += `<div class="bg-green-600/20 p-2 rounded-lg ml-auto w-fit">Anda: ${input.value}</div>`;
-                input.value = "";
-                chatBox.scrollTop = chatBox.scrollHeight;
+        // Ganti nomor WhatsApp kamu di sini (Gunakan kode negara 62)
+        const noWA = "6289515000822"; 
+
+        function kirimWA() {
+            const pesan = document.getElementById('pesan-user').value;
+            if (pesan === "") return alert("Isi pesan dulu bang!");
+            window.open(`https://wa.me/${noWA}?text=${encodeURIComponent(pesan)}`, '_blank');
+        }
+
+        function showPay() { document.getElementById('modal-pay').classList.toggle('hidden'); }
+        function showAdmin() { document.getElementById('modal-admin').classList.toggle('hidden'); }
+
+        function loginAdmin() {
+            const e = document.getElementById('adm-email').value;
+            const p = document.getElementById('adm-pass').value;
+            if(e === "dikasalto5@gmail.com" && p === "admin") {
+                alert("Halo Tatang! Fitur admin otomatis aktif.");
+                // Redirect ke link edit file/database atau dashboard rahasia
+            } else {
+                alert("Bukan Tatang ya?");
             }
         }
     </script>
