@@ -24,8 +24,8 @@
             <button onclick="toggleMenu()" class="text-white text-3xl">&times;</button>
         </div>
         <ul class="space-y-6 font-bold uppercase text-[11px] tracking-widest text-gray-300">
-            <li><a href="https://wa.me/628123456789" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-whatsapp text-lg text-green-500"></i> Nomor WhatsApp</a></li>
-            <li><a href="https://whatsapp.com/channel/link-saluran-kamu" class="flex items-center gap-3 hover:neon-green transition"><i class="fas fa-bullhorn text-lg text-green-400"></i> Saluran WhatsApp</a></li>
+            <li><a href="https://wa.me/62895328044863" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-whatsapp text-lg text-green-500"></i> Nomor WhatsApp</a></li>
+            <li><a href="#" class="flex items-center gap-3 hover:neon-green transition"><i class="fas fa-bullhorn text-lg text-green-400"></i> Saluran WhatsApp</a></li>
             <li><a href="https://youtube.com/@tatanglua" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-youtube text-lg text-red-600"></i> YouTube</a></li>
             <li><a href="https://tiktok.com/@tatang" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-tiktok text-lg text-white"></i> TikTok</a></li>
         </ul>
@@ -64,7 +64,7 @@
     </main>
 
     <div id="payment-modal" class="hidden fixed inset-0 bg-black/98 flex items-center justify-center p-4 z-[110]">
-        <div class="glass p-8 md:p-10 rounded-[40px] max-w-sm md:max-w-md w-full border-[#39FF14] border-2 text-center shadow-[0_0_50px_rgba(57,255,20,0.1)]">
+        <div class="glass p-8 md:p-10 rounded-[40px] max-w-sm md:max-w-md w-full border-[#39FF14] border-2 text-center shadow-[0_0_50px_rgba(57,255,20,0.1)] overflow-y-auto max-h-[90vh]">
             <div class="flex justify-between items-center mb-6 px-2">
                 <h3 class="neon-green font-black text-2xl italic uppercase underline tracking-widest">Checkout Panel</h3>
                 <button onclick="closePayment()" class="text-white hover:text-red-500 text-3xl font-black">&times;</button>
@@ -78,17 +78,10 @@
             <div class="space-y-3 text-left">
                 <div class="glass p-4 rounded-2xl border border-white/10 flex justify-between items-center">
                     <div>
-                        <p class="text-[10px] text-gray-500 font-bold uppercase mb-1 tracking-widest">DANA / GOPAY / OVO</p>
-                        <p class="text-lg font-mono font-bold text-white tracking-[0.2em] text-center">081234567890</p>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase mb-1 tracking-widest">DANA / GOPAY</p>
+                        <p class="text-lg font-mono font-bold text-white tracking-[0.1em]">0895328044863</p>
                     </div>
                     <i class="fas fa-wallet text-gray-600"></i>
-                </div>
-                <div class="glass p-4 rounded-2xl border border-white/10 flex justify-between items-center">
-                    <div>
-                        <p class="text-[10px] text-gray-500 font-bold uppercase mb-1 tracking-widest">SeaBank / Bank Jago</p>
-                        <p class="text-lg font-mono font-bold text-white tracking-[0.2em] text-center">901234567890</p>
-                    </div>
-                    <i class="fas fa-university text-gray-600"></i>
                 </div>
             </div>
 
@@ -103,11 +96,10 @@
         function openPayment() { document.getElementById('payment-modal').classList.remove('hidden'); }
         function closePayment() { document.getElementById('payment-modal').classList.add('hidden'); }
 
-        // Tutup modal jika klik di luar area
         window.onclick = function(event) {
             let modal = document.getElementById('payment-modal');
             if (event.target == modal) { closePayment(); }
         }
     </script>
 </body>
-                                                                                                                                                                                           </html>
+</html>
