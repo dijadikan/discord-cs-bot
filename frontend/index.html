@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>All In One Downloader</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🔥 All In One Downloader</h1>
+
+    <input type="text" id="url" placeholder="Paste link here..." />
+    
+    <select id="type">
+        <option value="auto">Auto Detect</option>
+        <option value="tiktok">TikTok</option>
+        <option value="instagram">Instagram</option>
+        <option value="youtube">YouTube</option>
+        <option value="facebook">Facebook</option>
+        <option value="twitter">Twitter/X</option>
+        <option value="soundcloud">SoundCloud</option>
+    </select>
+
+    <button onclick="download()">Download</button>
+
+    <div id="result"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
