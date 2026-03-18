@@ -1,122 +1,166 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tatang - SAMP Service</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #050505; color: #eee; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .neon-green { color: #39FF14; text-shadow: 0 0 10px #39FF14; }
-        .btn-neon { background: #39FF14; color: black; font-weight: bold; transition: 0.3s; border-radius: 15px; }
-        .btn-neon:hover { box-shadow: 0 0 25px #39FF14; transform: scale(1.05); }
-        .sidebar { transition: 0.4s; transform: translateX(-100%); }
-        .sidebar.active { transform: translateX(0); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WA Channel | Neon Hacker</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: black;
+  color: #00ffcc;
+  overflow-x: hidden;
+}
+
+/* Background animasi */
+body::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, #00ffcc22, #ff00ff22);
+  animation: bgMove 6s infinite alternate;
+  z-index: -1;
+}
+
+@keyframes bgMove {
+  0% { filter: blur(40px); transform: scale(1); }
+  100% { filter: blur(80px); transform: scale(1.2); }
+}
+
+h1 {
+  text-align: center;
+  margin: 30px 0;
+  text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+}
+
+/* Card */
+.card {
+  width: 320px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid #00ffcc;
+  box-shadow: 0 0 15px #00ffcc;
+  transition: 0.3s;
+  animation: fadeUp 1s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #00ffcc, 0 0 50px #ff00ff;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.emoji {
+  font-size: 35px;
+}
+
+h3 {
+  margin: 10px 0;
+}
+
+p {
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* Button neon */
+.btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 18px;
+  border: 1px solid #00ffcc;
+  border-radius: 10px;
+  color: #00ffcc;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #00ffcc;
+  color: black;
+  box-shadow: 0 0 20px #00ffcc;
+}
+
+/* Glitch text */
+.glitch {
+  position: relative;
+  color: #00ffcc;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+}
+
+.glitch::before {
+  color: #ff00ff;
+  animation: glitch 0.3s infinite;
+}
+
+.glitch::after {
+  color: #00ffff;
+  animation: glitch 0.3s infinite reverse;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+footer {
+  text-align: center;
+  margin: 30px 0;
+  font-size: 12px;
+  color: #555;
+}
+</style>
 </head>
-<body class="flex flex-col min-h-screen overflow-x-hidden">
 
-    <div id="sidebar" class="fixed inset-y-0 left-0 w-64 glass z-[100] p-6 sidebar shadow-2xl">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="neon-green font-black text-xl italic uppercase tracking-tighter">MENU INFO</h2>
-            <button onclick="toggleMenu()" class="text-white text-3xl">&times;</button>
-        </div>
-        <ul class="space-y-6 font-bold uppercase text-[11px] tracking-widest text-gray-300">
-            <li><a href="https://wa.me/62895328044863" target="_blank" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-whatsapp text-lg text-green-500"></i> Nomor WhatsApp</a></li>
-            <li><a href="https://whatsapp.com/channel/0029Vb6F8TTDZ4LiVouR9H24" target="_blank" class="flex items-center gap-3 hover:neon-green transition"><i class="fas fa-bullhorn text-lg text-green-400"></i> Saluran WhatsApp</a></li>
-            <li><a href="https://discord.gg/G5SABE8uQe" target="_blank" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-discord text-lg text-indigo-500"></i> Server Discord</a></li>
-            <li><a href="https://youtube.com/@tatanglua" target="_blank" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-youtube text-lg text-red-600"></i> YouTube</a></li>
-            <li><a href="https://www.tiktok.com/@tatang.lua" target="_blank" class="flex items-center gap-3 hover:neon-green transition"><i class="fab fa-tiktok text-lg text-white"></i> TikTok</a></li>
-        </ul>
-    </div>
+<body>
 
-    <nav class="p-6 glass sticky top-0 z-50 flex justify-between items-center px-8 shadow-xl">
-        <button onclick="toggleMenu()" class="text-2xl hover:neon-green transition"><i class="fas fa-bars"></i></button>
-        <h1 class="text-2xl font-black italic neon-green tracking-tighter uppercase text-center">TATANG</h1>
-        <div class="w-8"></div>
-    </nav>
+<h1 class="glitch" data-text="WA CHANNEL LIST">WA CHANNEL LIST</h1>
 
-    <main class="flex-grow flex flex-col items-center justify-center p-6">
-        <div class="text-center mb-10">
-            <h2 class="text-5xl md:text-6xl font-black uppercase italic tracking-tighter mb-2 text-white italic underline decoration-green-500/30">SAMP <span class="neon-green">SERVICE</span></h2>
-            <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-[10px]">Pengerjaan Cepat • 1 - 4 Jam Selesai</p>
-        </div>
+<div class="card">
+  <div class="emoji">🔥</div>
+  <h3>Script SAMP</h3>
+  <p>Monetloader, LUA, script gratis</p>
+  <a class="btn" href="https://whatsapp.com/channel/XXXXX" target="_blank">JOIN</a>
+</div>
 
-        <div class="glass p-10 rounded-[40px] w-full max-w-sm border-2 border-white/5 text-center shadow-2xl relative overflow-hidden transition-all duration-300 hover:border-green-500/20">
-            <div class="mb-6 relative">
-                <span class="bg-green-500/10 text-green-500 px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-green-500/20 shadow-inner">Specialist Monetloader</span>
-            </div>
-            
-            <div class="mb-8">
-                <p class="text-6xl font-black neon-green tracking-tighter italic">30K</p>
-                <p class="text-gray-500 text-[10px] font-bold mt-2 uppercase tracking-widest">Fixed Price / Request</p>
-            </div>
-            
-            <ul class="text-left space-y-3 mb-10 text-[11px] text-gray-400 font-bold uppercase tracking-widest px-2">
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Request Script Custom</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Custom Tema Mimgui</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> File No ENC (Open Source)</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Rename Script No ENC</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Fix Script Error</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Proses Cepat (1-4 Jam)</li>
-                <li class="flex items-center gap-3"><i class="fas fa-check-circle neon-green"></i> Info Lengkap Hubungi Admin</li>
-            </ul>
+<div class="card">
+  <div class="emoji">🎮</div>
+  <h3>Gaming Zone</h3>
+  <p>Info game & mod terbaru</p>
+  <a class="btn" href="https://whatsapp.com/channel/YYYYY" target="_blank">JOIN</a>
+</div>
 
-            <button onclick="openPayment()" class="w-full btn-neon py-4 uppercase tracking-widest text-xs shadow-lg">Beli Sekarang</button>
-        </div>
-    </main>
+<div class="card">
+  <div class="emoji">💸</div>
+  <h3>Info Cuan</h3>
+  <p>Tips cari uang online</p>
+  <a class="btn" href="https://whatsapp.com/channel/ZZZZZ" target="_blank">JOIN</a>
+</div>
 
-    <div id="payment-modal" class="hidden fixed inset-0 bg-black/98 flex items-center justify-center p-4 z-[110]">
-        <div class="glass p-8 md:p-10 rounded-[40px] max-w-sm md:max-w-md w-full border-[#39FF14] border-2 text-center shadow-[0_0_50px_rgba(57,255,20,0.1)] overflow-y-auto max-h-[95vh]">
-            <div class="flex justify-between items-center mb-6 px-2">
-                <h3 class="neon-green font-black text-2xl italic uppercase underline tracking-widest text-left">PAYMENT</h3>
-                <button onclick="closePayment()" class="text-white hover:text-red-500 text-3xl font-black">&times;</button>
-            </div>
+<footer>
+  © 2026 - Neon Hacker Style ⚡
+</footer>
 
-            <div class="bg-white p-6 rounded-3xl mb-4 inline-block w-full text-center shadow-2xl">
-                <img id="qris-image" src="https://i.ibb.co.com/6RwM0DrR/Kode-QRIS-FYY-STORE.png" alt="QRIS FYY STORE" class="mx-auto w-56 h-56 rounded-2xl">
-            </div>
-
-            <div class="space-y-3 text-left">
-                <div class="glass p-4 rounded-2xl border border-white/20 flex justify-between items-center cursor-pointer active:scale-95 transition" onclick="copyNumber()">
-                    <div>
-                        <p class="text-[9px] text-white font-bold uppercase mb-1 tracking-widest">Dana / Gopay (Klik untuk salin)</p>
-                        <p class="text-lg font-mono font-bold text-white tracking-[0.1em]" id="no-dana">0895328044863</p>
-                    </div>
-                    <i class="fas fa-copy text-green-500 opacity-80"></i>
-                </div>
-            </div>
-
-            <p class="mt-8 text-[10px] text-white uppercase font-black tracking-widest leading-relaxed text-center">
-                Setelah transfer kirim bukti transfer ke admin
-            </p>
-        </div>
-    </div>
-
-    <div id="copy-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-green-500 text-black px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest hidden z-[200] shadow-2xl">
-        Nomor Disalin!
-    </div>
-
-    <script>
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); }
-        function openPayment() { document.getElementById('payment-modal').classList.remove('hidden'); }
-        function closePayment() { document.getElementById('payment-modal').classList.add('hidden'); }
-
-        function copyNumber() {
-            const num = document.getElementById('no-dana').innerText;
-            navigator.clipboard.writeText(num);
-            
-            const toast = document.getElementById('copy-toast');
-            toast.classList.remove('hidden');
-            setTimeout(() => { toast.classList.add('hidden'); }, 2000);
-        }
-
-        window.onclick = function(event) {
-            let modal = document.getElementById('payment-modal');
-            if (event.target == modal) { closePayment(); }
-        }
-    </script>
 </body>
-                </html>
+</html>
